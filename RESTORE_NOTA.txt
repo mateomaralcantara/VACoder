@@ -1,0 +1,2 @@
+El script apply-upgrade.ps1 crea una carpeta backup-agente-tutor-FECHA-HORA con los archivos reemplazados.
+Para restaurar manualmente, copia los archivos desde esa carpeta hacia sus rutas originales.

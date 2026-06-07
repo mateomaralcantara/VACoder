@@ -1,0 +1,17 @@
+node_modules
+.next
+dist
+build
+out
+.env
+.env.local
+.vercel
+.DS_Store
+*.log
+backup-*
+backup-modern-ui-*
+backup-agente-tutor-*
+audit-agente-tutor.md
+
+datos.txt
+
