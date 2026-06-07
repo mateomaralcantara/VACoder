@@ -1,43 +1,19 @@
-# Agente Tutor IDE - Modern UI Pack
+# VACoder Project Scanner Pack
 
-Este paquete moderniza la interfaz del Agente Tutor IDE sin cambiar la arquitectura pesada de proveedores o agentes.
+Incluye los archivos base para escanear proyectos grandes y generar un manifiesto antes de enviar contexto al agente.
 
-## Incluye
+## Archivos incluidos
 
-- `app/globals.css` completamente rediseñado.
-- Componentes visuales modernizados.
-- Mejor estética glassmorphism/dark premium.
-- Búsqueda de archivos en `CodePanel`.
-- Mejor estado visual en ejecución.
-- Mejor panel de actividad y artefactos.
-- Mejor panel profesor.
-- Mejor panel terminal y diff.
-- Script de aplicación con backup automático.
+- `lib/file-filters.ts`
+- `lib/project-manifest.ts`
+- `lib/project-scanner.ts`
+- `lib/prompts/evaluate-project.ts`
 
-## Cómo aplicar
+## Aplicar
 
-Copia/descomprime este paquete dentro de la raíz del proyecto y ejecuta:
+Copia las carpetas `lib/` sobre la raíz de tu proyecto `VACoder` o ejecuta `apply-project-scanner.ps1`.
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\apply-modern-ui.ps1
+powershell -ExecutionPolicy Bypass -File .\apply-project-scanner.ps1
 npm run build
-npm run dev
 ```
-
-## Archivos tocados
-
-```txt
-app/globals.css
-components/activity-panel.tsx
-components/code-panel.tsx
-components/control-bar.tsx
-components/diff-panel.tsx
-components/run-status-bar.tsx
-components/teacher-panel.tsx
-components/terminal-panel.tsx
-components/workspace.tsx
-```
-
-## Nota
-
-Este pack asume que ya aplicaste la base robusta anterior, porque usa tipos como `RunMode`, `WorkspaceState`, `TerminalOutput`, `BuildResult`, `TestResult` y utilidades como `applyStreamEventToState`, `project-state`, `diff-utils` y `use-agent-run`.
