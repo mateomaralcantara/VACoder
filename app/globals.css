@@ -986,3 +986,138 @@ select {
     flex-direction: column;
   }
 }
+
+
+/* ===== Project Scanner Connection ===== */
+
+.project-scan-panel {
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-scan-panel::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(34, 211, 238, 0.11), transparent 28%),
+    radial-gradient(circle at 90% 12%, rgba(139, 92, 246, 0.12), transparent 32%);
+}
+
+.scan-controls,
+.scan-metric-grid,
+.scan-columns {
+  position: relative;
+  z-index: 1;
+}
+
+.scan-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: end;
+}
+
+.scan-root-field input {
+  width: 100%;
+}
+
+.scan-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.scan-error,
+.scan-empty,
+.scan-card {
+  border: 1px solid rgba(141, 167, 216, 0.14);
+  border-radius: 18px;
+  background: rgba(8, 13, 26, 0.62);
+  padding: 14px;
+}
+
+.scan-error {
+  margin-top: 14px;
+  border-color: rgba(251, 113, 133, 0.32);
+  background: rgba(127, 29, 29, 0.18);
+}
+
+.scan-error p,
+.scan-empty p {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.scan-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.scan-columns {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.scan-card h3 {
+  margin: 0 0 10px;
+  font-size: 0.98rem;
+}
+
+.scan-file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scan-file {
+  display: block;
+  border: 1px solid rgba(141, 167, 216, 0.12);
+  border-radius: 12px;
+  padding: 8px 10px;
+  background: rgba(15, 23, 42, 0.48);
+  color: var(--text);
+  font-family: "SFMono-Regular", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.scan-file.warning {
+  border-color: rgba(245, 158, 11, 0.26);
+  background: rgba(245, 158, 11, 0.08);
+  color: #ffe4ad;
+}
+
+.scan-empty {
+  margin-top: 14px;
+}
+
+@media (max-width: 1280px) {
+  .scan-columns,
+  .scan-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .scan-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .scan-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .scan-columns,
+  .scan-metric-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
