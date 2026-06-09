@@ -22,21 +22,32 @@ function stringifyUnknown(value: unknown): string {
 
 function stripMarkdownJsonFence(text: string): string {
   const trimmed = text.trim();
-  const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i);
 
-  if (fenced?.[1]) {
-    return fenced[1].trim();
+  const exactFence = trimmed.match(/^```(?:json|JSON)?\s*([\s\S]*?)\s*```$/);
+
+  if (exactFence?.[1]) {
+    return exactFence[1].trim();
+  }
+
+  const anyFence = trimmed.match(/```(?:json|JSON)?\s*([\s\S]*?)```/);
+
+  if (anyFence?.[1]) {
+    return anyFence[1].trim();
   }
 
   return trimmed;
 }
 
-function extractJsonCandidate(text: string): string {
-  const stripped = stripMarkdownJsonFence(text);
+function normalizeProviderText(text: string): string {
+  return text
+    .replace(/^\uFEFF/, '')
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .trim();
+}
 
-  if (stripped.startsWith('[') || stripped.startsWith('{')) {
-    return stripped;
-  }
+function extractJsonCandidate(text: string): string {
+  const stripped = normalizeProviderText(stripMarkdownJsonFence(text));
 
   const firstArray = stripped.indexOf('[');
   const firstObject = stripped.indexOf('{');
@@ -50,7 +61,119 @@ function extractJsonCandidate(text: string): string {
       ? Math.min(firstArray, firstObject)
       : Math.max(firstArray, firstObject);
 
-  return stripped.slice(start).trim();
+  const source = stripped.slice(start);
+  const stack: string[] = [];
+  let inString = false;
+  let escaped = false;
+
+  for (let index = 0; index < source.length; index += 1) {
+    const char = source[index];
+
+    if (escaped) {
+      escaped = false;
+      continue;
+    }
+
+    if (char === '\\') {
+      escaped = true;
+      continue;
+    }
+
+    if (char === '"') {
+      inString = !inString;
+      continue;
+    }
+
+    if (inString) {
+      continue;
+    }
+
+    if (char === '[' || char === '{') {
+      stack.push(char);
+      continue;
+    }
+
+    if (char === ']' || char === '}') {
+      const last = stack[stack.length - 1];
+
+      if ((char === ']' && last === '[') || (char === '}' && last === '{')) {
+        stack.pop();
+
+        if (stack.length === 0) {
+          return source.slice(0, index + 1).trim();
+        }
+      }
+    }
+  }
+
+  return source.trim();
+}
+
+function escapeControlCharactersInsideStrings(input: string): string {
+  let output = '';
+  let inString = false;
+  let escaped = false;
+
+  for (let index = 0; index < input.length; index += 1) {
+    const char = input[index];
+
+    if (escaped) {
+      output += char;
+      escaped = false;
+      continue;
+    }
+
+    if (char === '\\') {
+      output += char;
+      escaped = true;
+      continue;
+    }
+
+    if (char === '"') {
+      output += char;
+      inString = !inString;
+      continue;
+    }
+
+    if (inString) {
+      if (char === '\n') {
+        output += '\\n';
+        continue;
+      }
+
+      if (char === '\r') {
+        continue;
+      }
+
+      if (char === '\t') {
+        output += '\\t';
+        continue;
+      }
+    }
+
+    output += char;
+  }
+
+  return output;
+}
+
+function removeTrailingCommas(input: string): string {
+  return input.replace(/,\s*([}\]])/g, '$1');
+}
+
+function repairJsonCandidate(input: string): string {
+  return removeTrailingCommas(escapeControlCharactersInsideStrings(input.trim()));
+}
+
+function parseProviderJson(text: string): unknown {
+  const candidate = extractJsonCandidate(text);
+
+  try {
+    return JSON.parse(candidate) as unknown;
+  } catch {
+    const repaired = repairJsonCandidate(candidate);
+    return JSON.parse(repaired) as unknown;
+  }
 }
 
 function countPatchLines(patch: string, prefix: '+' | '-'): number {
@@ -84,6 +207,36 @@ function normalizePlanSteps(value: unknown): string[] {
   return lines.length > 0 ? lines : [text];
 }
 
+function normalizeReportBody(value: unknown): string {
+  const body = stringifyUnknown(value).trim();
+
+  if (!body) {
+    return 'El proveedor no entregó contenido para el reporte.';
+  }
+
+  try {
+    const parsed = JSON.parse(body) as unknown;
+
+    if (parsed && typeof parsed === 'object') {
+      return JSON.stringify(parsed, null, 2);
+    }
+  } catch {
+    // El body ya es texto plano o JSON parcial. Se deja como texto.
+  }
+
+  return body;
+}
+
+function recoverUsefulProviderText(text: string): string {
+  const cleaned = stripMarkdownJsonFence(text).trim();
+
+  if (!cleaned) {
+    return 'El proveedor respondió, pero la salida llegó vacía.';
+  }
+
+  return cleaned.slice(0, 12000);
+}
+
 type LegacyProviderEvent = {
   type?: unknown;
   event?: unknown;
@@ -94,6 +247,7 @@ type LegacyProviderEvent = {
   item?: unknown;
   artifact?: unknown;
   fileId?: unknown;
+  path?: unknown;
   content?: unknown;
   patch?: unknown;
   command?: unknown;
@@ -101,6 +255,7 @@ type LegacyProviderEvent = {
   error?: unknown;
   summary?: unknown;
   level?: unknown;
+  kind?: unknown;
 };
 
 function normalizeProviderEvent(raw: unknown): StreamEvent[] {
@@ -199,7 +354,7 @@ function normalizeProviderEvent(raw: unknown): StreamEvent[] {
 
     case 'patch-file': {
       const legacyData = data && typeof data === 'object' ? (data as Record<string, unknown>) : {};
-      const fileId = stringifyUnknown(item.fileId ?? legacyData.fileId ?? 'unknown-file');
+      const fileId = stringifyUnknown(item.fileId ?? legacyData.fileId ?? item.path ?? legacyData.path ?? 'unknown-file');
       const fullContent = item.content ?? legacyData.content;
       const patch = item.patch ?? legacyData.patch;
 
@@ -256,23 +411,25 @@ function normalizeProviderEvent(raw: unknown): StreamEvent[] {
     }
 
     case 'artifact': {
-      if (data && typeof data === 'object' && 'body' in data) {
-        const artifact = data as Record<string, unknown>;
+      const artifactData = data && typeof data === 'object' ? (data as Record<string, unknown>) : null;
+
+      if (artifactData) {
+        const kind = artifactData.kind;
 
         return [
           {
             type: 'artifact',
             artifact: {
-              id: typeof artifact.id === 'string' ? artifact.id : createId('artifact'),
-              title: typeof artifact.title === 'string' ? artifact.title : 'Artefacto del proveedor',
-              body: stringifyUnknown(artifact.body),
+              id: typeof artifactData.id === 'string' ? artifactData.id : createId('artifact'),
+              title: typeof artifactData.title === 'string' ? artifactData.title : 'Reporte del proveedor',
+              body: normalizeReportBody(artifactData.body ?? artifactData.content ?? artifactData.report ?? data),
               kind:
-                artifact.kind === 'summary' ||
-                artifact.kind === 'code' ||
-                artifact.kind === 'report' ||
-                artifact.kind === 'checklist' ||
-                artifact.kind === 'deploy'
-                  ? artifact.kind
+                kind === 'summary' ||
+                kind === 'code' ||
+                kind === 'report' ||
+                kind === 'checklist' ||
+                kind === 'deploy'
+                  ? kind
                   : 'report',
               timestamp: timestamp(),
             },
@@ -285,8 +442,8 @@ function normalizeProviderEvent(raw: unknown): StreamEvent[] {
           type: 'artifact',
           artifact: {
             id: createId('artifact'),
-            title: 'Artefacto del proveedor',
-            body: stringifyUnknown(data),
+            title: typeof item.title === 'string' ? item.title : 'Reporte del proveedor',
+            body: normalizeReportBody(data),
             kind: 'report',
             timestamp: timestamp(),
           },
@@ -358,6 +515,7 @@ export function buildAgentInstruction(input: NormalizedAgentRunInput): string {
 Debes responder SOLO con JSON válido.
 No uses Markdown.
 No uses bloques \`\`\`json.
+No escribas texto antes ni después del JSON.
 
 Formato obligatorio:
 [
@@ -389,7 +547,7 @@ Formato obligatorio:
       "id": "report-1",
       "title": "Reporte final",
       "kind": "report",
-      "body": "reporte"
+      "body": "reporte en texto plano, no JSON anidado"
     }
   },
   {
@@ -418,16 +576,18 @@ Reglas estrictas:
 4. Si runMode es plan-only, NO emitas patch-file, create-file, delete-file ni rename-file.
 5. Para patch-file debes enviar contenido completo en "content", no unified diff.
 6. Si solo tienes unified diff, emite "diff" y "artifact", no patch-file.
-7. Devuelve JSON puro. Sin \`\`\`, sin texto antes, sin texto después.
+7. artifact.body debe ser texto plano o Markdown simple dentro de un string JSON válido.
+8. No pongas JSON anidado dentro de artifact.body.
+9. Escapa correctamente saltos de línea como \\n si usas texto largo.
+10. Devuelve JSON puro. Sin \`\`\`, sin texto antes, sin texto después.
 `;
 }
 
 export function eventsFromProviderText(text: string): StreamEvent[] {
   const trimmed = text.trim();
-  const candidate = extractJsonCandidate(trimmed);
 
   try {
-    const parsed = JSON.parse(candidate) as unknown;
+    const parsed = parseProviderJson(trimmed);
 
     if (Array.isArray(parsed)) {
       const normalized = parsed.flatMap((item) => normalizeProviderEvent(item));
@@ -444,14 +604,16 @@ export function eventsFromProviderText(text: string): StreamEvent[] {
     // Fallback below.
   }
 
+  const recovered = recoverUsefulProviderText(trimmed);
+
   return [
     {
       type: 'teacher',
       message: {
         id: createId('provider-text'),
-        title: 'Respuesta del proveedor',
-        concept: 'Salida no estructurada',
-        body: trimmed.slice(0, 4000),
+        title: 'Respuesta recuperada del proveedor',
+        concept: 'Salida parcialmente estructurada',
+        body: recovered.slice(0, 4000),
         timestamp: timestamp(),
       },
     },
@@ -459,15 +621,15 @@ export function eventsFromProviderText(text: string): StreamEvent[] {
       type: 'artifact',
       artifact: {
         id: createId('provider-artifact'),
-        title: 'Salida convertida a artefacto',
-        body: trimmed.slice(0, 6000),
+        title: 'Reporte recuperado del proveedor',
+        body: recovered,
         kind: 'report',
         timestamp: timestamp(),
       },
     },
     {
       type: 'done',
-      summary: 'Proveedor respondió, pero no entregó eventos JSON estructurados.',
+      summary: 'Proveedor respondió. La salida fue recuperada como reporte porque no cumplió completamente el contrato JSON.',
       timestamp: timestamp(),
     },
   ];
