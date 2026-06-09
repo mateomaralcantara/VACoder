@@ -36,12 +36,14 @@ const defaultMessages: TeacherMessage[] = [
   },
 ];
 
+const INITIAL_TIMESTAMP = '2026-01-01T00:00:00.000Z';
+
 const defaultLogs: ActivityLog[] = [
   {
     id: 'boot',
     level: 'info',
     message: '$ espacio iniciado → contrato de eventos cargado',
-    timestamp: new Date().toISOString(),
+    timestamp: INITIAL_TIMESTAMP,
   },
 ];
 

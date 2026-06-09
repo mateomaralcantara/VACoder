@@ -8,20 +8,27 @@ interface ActivityPanelProps {
   artifacts: FinalArtifact[];
 }
 
-function formatTime(timestamp?: string) {
+function pad2(value: number): string {
+  return String(value).padStart(2, '0');
+}
+
+/**
+ * Formato estable para SSR/cliente.
+ * No usar toLocaleTimeString aquí porque puede renderizar espacios invisibles distintos:
+ * "p. m." vs "p. m." y eso rompe hydration.
+ */
+function formatTime(timestamp?: string): string {
   if (!timestamp) {
     return '';
   }
 
-  try {
-    return new Date(timestamp).toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    });
-  } catch {
+  const date = new Date(timestamp);
+
+  if (Number.isNaN(date.getTime())) {
     return '';
   }
+
+  return `${pad2(date.getUTCHours())}:${pad2(date.getUTCMinutes())}:${pad2(date.getUTCSeconds())}`;
 }
 
 export function ActivityPanel({ logs, artifacts }: ActivityPanelProps) {
@@ -71,7 +78,8 @@ export function ActivityPanel({ logs, artifacts }: ActivityPanelProps) {
 
             return (
               <span key={log.id} className={`console-line ${log.level}`}>
-                {time ? `[${time}] ` : ''}{log.message}
+                {time ? `[${time}] ` : ''}
+                {log.message}
               </span>
             );
           })}
