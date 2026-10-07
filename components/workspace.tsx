@@ -121,7 +121,7 @@ function createManifestTeacherMessage(): TeacherMessage {
   };
 }
 
-export function Workspace() {
+export function Workspace({ embedded = false }: { embedded?: boolean } = {}) {
   const [state, setState] = useState<WorkspaceState>(() => createInitialState());
   const [prompt, setPrompt] = useState(DEFAULT_AGENT_PROMPT);
   const [provider, setProvider] = useState<Provider>('demo');
@@ -276,18 +276,20 @@ export function Workspace() {
   }, []);
 
   return (
-    <main className="shell">
-      <header className="header">
-        <div className="hero">
-          <h1>VACoder Agent OS</h1>
-          <p>
-            Evalúa proyectos grandes con scanner, manifiesto, streaming seguro, diff, terminal,
-            validación y profesor en vivo antes de pasar a multi-agentes.
-          </p>
-        </div>
+    <main className={embedded ? 'workspace-embedded' : 'shell'}>
+      {!embedded ? (
+        <header className="header">
+          <div className="hero">
+            <h1>VACoder Agent OS</h1>
+            <p>
+              Evalúa proyectos grandes con scanner, manifiesto, streaming seguro, diff, terminal,
+              validación y profesor en vivo antes de pasar a multi-agentes.
+            </p>
+          </div>
 
-        <div className="header-badge">project scanner conectado</div>
-      </header>
+          <div className="header-badge">project scanner conectado</div>
+        </header>
+      ) : null}
 
       <RunStatusBar
         status={state.status}

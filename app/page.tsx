@@ -1,5 +1,10 @@
-import { Workspace } from '@/components/workspace';
+import { VacoderAppShell } from '@/components/vacoder-app-shell';
+import { VacoderDashboard } from '@/components/vacoder-dashboard';
 
 export default function HomePage() {
-  return <Workspace />;
+  return (
+    <VacoderAppShell>
+      <VacoderDashboard />
+    </VacoderAppShell>
+  );
 }
