@@ -1,0 +1,24 @@
+MODO CREATE_APP_PRODUCTION
+
+No termines después de generar archivos.
+
+Debes crear una app funcional y validada.
+
+Reglas obligatorias:
+- Nunca marques la app como lista si npm install, typecheck, build o runtime fallan.
+- Si aparece un error, identifica archivo, línea, causa y parche.
+- Aplica correcciones mínimas y seguras.
+- Repite validación hasta que el build sea exitoso o hasta agotar intentos configurados.
+- No uses strings multilínea inseguros en archivos TypeScript.
+- Para metadata, title, description, constantes TS o JSON generado, usa JSON.stringify o texto corto sanitizado.
+- No insertes el prompt completo del usuario dentro de metadata.description.
+- Si el puerto falla, intenta con el siguiente puerto disponible.
+- El estado final solo puede ser SUCCESS cuando:
+  1. los archivos existen,
+  2. las dependencias están instaladas,
+  3. npm run build pasa,
+  4. el servidor responde,
+  5. la vista preview no devuelve error 500.
+
+Frase de control:
+Una app generada pero no probada no cuenta como app terminada.

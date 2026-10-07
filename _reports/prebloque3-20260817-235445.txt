@@ -1,0 +1,40 @@
+﻿VACODER PRE-BLOQUE 3
+Score: 100/100
+PASS=30 WARN=5 FAIL=0
+GateReady=True
+
+[PASS] JSON :: package.json :: JSON valido
+[PASS] JSON :: tsconfig.json :: JSON valido
+[PASS] Dependencies :: next :: ^15.0.0
+[PASS] Dependencies :: react :: ^19.0.0
+[PASS] Dependencies :: @supabase/supabase-js :: ^2.112.3
+[PASS] Dependencies :: @supabase/ssr :: ^0.12.4
+[PASS] Environment :: NEXT_PUBLIC_SUPABASE_URL :: Configurada
+[PASS] Environment :: Supabase public key :: Configurada
+[PASS] Security :: NEXT_PUBLIC secret exposure :: No detectado
+[WARN] Git :: Tracked .env files :: .env.example
+[WARN] Git :: Working tree :: Hay cambios sin commit
+[PASS] LIVE1/LIVE2 :: lib\supabase\server.ts :: Existe
+[PASS] LIVE1/LIVE2 :: lib\live1\auth.ts :: Existe
+[PASS] LIVE1/LIVE2 :: lib\control-plane\types.ts :: Existe
+[PASS] LIVE1/LIVE2 :: lib\control-plane\bridge.ts :: Existe
+[PASS] LIVE1/LIVE2 :: lib\control-plane\project.ts :: Existe
+[PASS] LIVE1/LIVE2 :: lib\control-plane\persistence.ts :: Existe
+[PASS] LIVE1/LIVE2 :: app\api\control-plane\health\route.ts :: Existe
+[PASS] LIVE1/LIVE2 :: app\api\control-plane\projects\[id]\[...action]\route.ts :: Existe
+[PASS] LIVE1/LIVE2 :: components\project-control-plane.tsx :: Existe
+[PASS] LIVE1/LIVE2 :: app\dashboard\projects\[id]\control\page.tsx :: Existe
+[PASS] LIVE1/LIVE2 :: supabase\migrations\20260817_live1_saas_core.sql :: Existe
+[PASS] LIVE1/LIVE2 :: supabase\migrations\20260817_live2_control_plane.sql :: Existe
+[PASS] Architecture :: Project resolver :: lib\control-plane\project.ts
+[PASS] Architecture :: Workspace resolver :: lib\control-plane\project.ts
+[PASS] Architecture :: Runtime persistence :: lib\control-plane\persistence.ts
+[PASS] Architecture :: Change-set persistence :: lib\control-plane\persistence.ts
+[PASS] Architecture :: Control Plane certification :: app\api\control-plane\projects\[id]\[...action]\route.ts
+[WARN] Security :: app\api\project\run-command\route.ts :: Shell endpoint local: NO exponer publicamente sin auth/allowlist/worker isolation
+[WARN] Security :: app\api\supreme\runtime\command\route.ts :: Shell endpoint local: NO exponer publicamente sin auth/allowlist/worker isolation
+[WARN] Dependencies :: npm audit high :: 4 high; revisar sin usar --force a ciegas
+[PASS] Build Safety :: Coder dev process :: No hay proceso compitiendo con .next
+[PASS] Compiler :: npm run typecheck :: tsc limpio
+[PASS] Build :: npm run build :: Next production build limpio
+[PASS] Build :: routes-manifest.json :: Generado

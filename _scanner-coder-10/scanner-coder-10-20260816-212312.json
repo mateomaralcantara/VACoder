@@ -1,0 +1,425 @@
+﻿{
+    "Project":  "VACoder Agent OS / Coder",
+    "Root":  "C:\\Users\\martin\\Desktop\\VSC\\BestS\\Coder",
+    "GeneratedAt":  "2026-08-16 21:24:28",
+    "Score10":  10,
+    "Score100":  100,
+    "EarnedPoints":  141,
+    "MaxPoints":  141,
+    "Grade":  "10/10 casi premium",
+    "FailCount":  0,
+    "WarnCount":  0,
+    "Findings":  [
+                     {
+                         "Section":  "Package",
+                         "Item":  "package.json existe",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "package.json encontrado."
+                     },
+                     {
+                         "Section":  "Package",
+                         "Item":  "script dev",
+                         "Status":  "OK",
+                         "Points":  1,
+                         "Max":  1,
+                         "Details":  "npm run dev existe."
+                     },
+                     {
+                         "Section":  "Package",
+                         "Item":  "script typecheck",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "npm run typecheck existe."
+                     },
+                     {
+                         "Section":  "Package",
+                         "Item":  "script build",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "npm run build existe."
+                     },
+                     {
+                         "Section":  "Package",
+                         "Item":  "Next.js dependency",
+                         "Status":  "OK",
+                         "Points":  1,
+                         "Max":  1,
+                         "Details":  "Next detectado."
+                     },
+                     {
+                         "Section":  "Package",
+                         "Item":  "TypeScript dependency",
+                         "Status":  "OK",
+                         "Points":  1,
+                         "Max":  1,
+                         "Details":  "TypeScript detectado."
+                     },
+                     {
+                         "Section":  "Package",
+                         "Item":  "React dependency",
+                         "Status":  "OK",
+                         "Points":  1,
+                         "Max":  1,
+                         "Details":  "React detectado."
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Agent Stream",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "app\\api\\agent\\stream\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Builder Create",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "app\\api\\project\\builder\\create\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Builder Preview",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "app\\api\\project\\builder\\preview\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Production Status",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\production\\status\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Patch Apply",
+                         "Status":  "OK",
+                         "Points":  4,
+                         "Max":  4,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Project Scan",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\scan\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Snapshot",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\snapshot\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Diff",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\diff\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Validate",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\validate\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Rollback",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\rollback\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Not Found page",
+                         "Status":  "OK",
+                         "Points":  1,
+                         "Max":  1,
+                         "Details":  "app\\not-found.tsx"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "VACoder Core",
+                         "Status":  "OK",
+                         "Points":  5,
+                         "Max":  5,
+                         "Details":  "lib\\vacoder\\core.ts"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Proteccion de ruta absoluta",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene assertSafeProjectPath"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Proteccion de ruta relativa",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene assertSafeRelativePath"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Snapshot de proyecto",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene snapshotProject"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Diff de snapshots",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene diffSnapshots"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Backup automatico",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene createBackup"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Rollback automatico",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene rollbackBackup"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Validador typecheck/build",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene validateProject"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Ejecucion de comandos",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\vacoder\\core.ts contiene runCommand"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Escritura real de archivos",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene writeProjectFile"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Eliminacion controlada",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\vacoder\\core.ts contiene deleteProjectFile"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Timeout de comandos",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\vacoder\\core.ts contiene timeoutMs|timedOut|TIMEOUT"
+                     },
+                     {
+                         "Section":  "Patch Agent",
+                         "Item":  "Crea backup antes de modificar",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts contiene createBackup"
+                     },
+                     {
+                         "Section":  "Patch Agent",
+                         "Item":  "Rollback si falla validacion",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts contiene rollbackBackup"
+                     },
+                     {
+                         "Section":  "Patch Agent",
+                         "Item":  "Valida despues de modificar",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts contiene validateProject"
+                     },
+                     {
+                         "Section":  "Patch Agent",
+                         "Item":  "Escribe archivo real",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts contiene writeProjectFile"
+                     },
+                     {
+                         "Section":  "Patch Agent",
+                         "Item":  "Normaliza operaciones",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts contiene normalizeOperations"
+                     },
+                     {
+                         "Section":  "Patch Agent",
+                         "Item":  "Soporta files[] directos",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts contiene files"
+                     },
+                     {
+                         "Section":  "Patch Agent",
+                         "Item":  "Receta por prompt",
+                         "Status":  "OK",
+                         "Points":  1,
+                         "Max":  1,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts contiene promptRequestsBookReading"
+                     },
+                     {
+                         "Section":  "UI",
+                         "Item":  "Production Run Panel",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "components\\production-run-panel.tsx"
+                     },
+                     {
+                         "Section":  "UI",
+                         "Item":  "Workspace principal",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "components\\workspace.tsx"
+                     },
+                     {
+                         "Section":  "Production",
+                         "Item":  "Production Client",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\production-client.ts"
+                     },
+                     {
+                         "Section":  "Production",
+                         "Item":  "Production Types",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\production\\types.ts"
+                     },
+                     {
+                         "Section":  "UI",
+                         "Item":  "Status seguro / events fallback",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "components\\production-run-panel.tsx contiene normalizeStatus"
+                     },
+                     {
+                         "Section":  "UI",
+                         "Item":  "Uso de safeStatus",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "components\\production-run-panel.tsx contiene safeStatus"
+                     },
+                     {
+                         "Section":  "UI",
+                         "Item":  "Timeline de eventos",
+                         "Status":  "OK",
+                         "Points":  1,
+                         "Max":  1,
+                         "Details":  "components\\production-run-panel.tsx contiene status.events|safeStatus.events"
+                     },
+                     {
+                         "Section":  "Security",
+                         "Item":  "Patrones peligrosos",
+                         "Status":  "OK",
+                         "Points":  8,
+                         "Max":  8,
+                         "Details":  "No se detectaron eval, new Function, dangerouslySetInnerHTML ni secretos obvios."
+                     },
+                     {
+                         "Section":  "Security",
+                         "Item":  "Raiz permitida APPS_ROOT",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\vacoder\\core.ts contiene APPS_ROOT"
+                     },
+                     {
+                         "Section":  "Security",
+                         "Item":  "Ignora carpetas peligrosas",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\vacoder\\core.ts contiene SKIP_DIRS"
+                     },
+                     {
+                         "Section":  "Security",
+                         "Item":  "No escanea basura pesada",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\vacoder\\core.ts contiene node_modules|\\.next|\\.git"
+                     },
+                     {
+                         "Section":  "Validation",
+                         "Item":  "npm run typecheck",
+                         "Status":  "OK",
+                         "Points":  8,
+                         "Max":  8,
+                         "Details":  "Typecheck paso correctamente."
+                     },
+                     {
+                         "Section":  "Validation",
+                         "Item":  "npm run build",
+                         "Status":  "OK",
+                         "Points":  12,
+                         "Max":  12,
+                         "Details":  "Build paso correctamente."
+                     },
+                     {
+                         "Section":  "Live API",
+                         "Item":  "Checks localhost",
+                         "Status":  "SKIP",
+                         "Points":  0,
+                         "Max":  0,
+                         "Details":  "Usa -RunApiChecks si Coder esta corriendo en localhost:3000."
+                     }
+                 ],
+    "Recommendations":  [
+                            "No hay fallas criticas. Proxima fase: IA real multiarchivo, diff visual, aprobacion UI, Git commit y deploy."
+                        ]
+}

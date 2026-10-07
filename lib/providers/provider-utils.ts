@@ -171,8 +171,7 @@ function parseProviderJson(text: string): unknown {
   try {
     return JSON.parse(candidate) as unknown;
   } catch {
-    const repaired = repairJsonCandidate(candidate);
-    return JSON.parse(repaired) as unknown;
+    return JSON.parse(repairJsonCandidate(candidate)) as unknown;
   }
 }
 
@@ -190,19 +189,20 @@ function countPatchLines(patch: string, prefix: '+' | '-'): number {
 
 function normalizePlanSteps(value: unknown): string[] {
   if (Array.isArray(value)) {
-    return value.map((item) => stringifyUnknown(item)).filter(Boolean);
+    return value.map((item) => stringifyUnknown(item)).filter(Boolean).slice(0, 6);
   }
 
   const text = stringifyUnknown(value).trim();
 
   if (!text) {
-    return ['El proveedor no detalló pasos concretos.'];
+    return ['Analizar manifiesto.', 'Detectar riesgos.', 'Priorizar archivos.', 'Entregar reporte.'];
   }
 
   const lines = text
     .split(/\n+/)
     .map((line) => line.replace(/^[-*\d.)\s]+/, '').trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .slice(0, 6);
 
   return lines.length > 0 ? lines : [text];
 }
@@ -218,13 +218,13 @@ function normalizeReportBody(value: unknown): string {
     const parsed = JSON.parse(body) as unknown;
 
     if (parsed && typeof parsed === 'object') {
-      return JSON.stringify(parsed, null, 2);
+      return JSON.stringify(parsed, null, 2).slice(0, 9000);
     }
   } catch {
-    // El body ya es texto plano o JSON parcial. Se deja como texto.
+    // El body ya es texto plano o Markdown simple.
   }
 
-  return body;
+  return body.slice(0, 9000);
 }
 
 function recoverUsefulProviderText(text: string): string {
@@ -243,6 +243,7 @@ type LegacyProviderEvent = {
   data?: unknown;
   value?: unknown;
   title?: unknown;
+  steps?: unknown;
   message?: unknown;
   item?: unknown;
   artifact?: unknown;
@@ -275,7 +276,7 @@ function normalizeProviderEvent(raw: unknown): StreamEvent[] {
   }
 
   const item = raw as LegacyProviderEvent;
-  const eventType = String(item.type ?? item.event ?? '').trim();
+  const eventType = String(item.type ?? item.event ?? '').trim().toLowerCase();
   const data = item.data ?? item.value ?? item.message ?? item.item ?? item.artifact;
 
   switch (eventType) {
@@ -293,8 +294,8 @@ function normalizeProviderEvent(raw: unknown): StreamEvent[] {
       return [
         {
           type: 'plan',
-          title: typeof item.title === 'string' ? item.title : 'Plan del proveedor',
-          steps: normalizePlanSteps(data),
+          title: typeof item.title === 'string' ? item.title : 'Plan de evaluación',
+          steps: normalizePlanSteps(data ?? item.steps),
           timestamp: timestamp(),
         },
       ];
@@ -309,9 +310,9 @@ function normalizeProviderEvent(raw: unknown): StreamEvent[] {
             type: 'teacher',
             message: {
               id: typeof message.id === 'string' ? message.id : createId('teacher'),
-              title: typeof message.title === 'string' ? message.title : 'Respuesta del proveedor',
-              concept: typeof message.concept === 'string' ? message.concept : 'Proveedor real',
-              body: stringifyUnknown(message.body),
+              title: typeof message.title === 'string' ? message.title : 'Criterio de evaluación',
+              concept: typeof message.concept === 'string' ? message.concept : 'Diagnóstico técnico',
+              body: stringifyUnknown(message.body).slice(0, 2500),
               timestamp: timestamp(),
             },
           },
@@ -323,9 +324,9 @@ function normalizeProviderEvent(raw: unknown): StreamEvent[] {
           type: 'teacher',
           message: {
             id: createId('teacher'),
-            title: typeof item.title === 'string' ? item.title : 'Respuesta del proveedor',
-            concept: 'Proveedor real',
-            body: stringifyUnknown(data),
+            title: typeof item.title === 'string' ? item.title : 'Criterio de evaluación',
+            concept: 'Diagnóstico técnico',
+            body: stringifyUnknown(data).slice(0, 2500),
             timestamp: timestamp(),
           },
         },
@@ -345,7 +346,7 @@ function normalizeProviderEvent(raw: unknown): StreamEvent[] {
               item.level === 'info'
                 ? item.level
                 : 'info',
-            message: stringifyUnknown(data),
+            message: stringifyUnknown(data).slice(0, 1000),
             timestamp: timestamp(),
           },
         },
@@ -421,7 +422,7 @@ function normalizeProviderEvent(raw: unknown): StreamEvent[] {
             type: 'artifact',
             artifact: {
               id: typeof artifactData.id === 'string' ? artifactData.id : createId('artifact'),
-              title: typeof artifactData.title === 'string' ? artifactData.title : 'Reporte del proveedor',
+              title: typeof artifactData.title === 'string' ? artifactData.title : 'Reporte final',
               body: normalizeReportBody(artifactData.body ?? artifactData.content ?? artifactData.report ?? data),
               kind:
                 kind === 'summary' ||
@@ -442,7 +443,7 @@ function normalizeProviderEvent(raw: unknown): StreamEvent[] {
           type: 'artifact',
           artifact: {
             id: createId('artifact'),
-            title: typeof item.title === 'string' ? item.title : 'Reporte del proveedor',
+            title: typeof item.title === 'string' ? item.title : 'Reporte final',
             body: normalizeReportBody(data),
             kind: 'report',
             timestamp: timestamp(),
@@ -472,7 +473,7 @@ function normalizeProviderEvent(raw: unknown): StreamEvent[] {
       return [
         {
           type: 'done',
-          summary: stringifyUnknown(item.summary ?? data ?? 'Ejecución completada.'),
+          summary: stringifyUnknown(item.summary ?? data ?? 'Evaluación completada.'),
           timestamp: timestamp(),
         },
       ];
@@ -496,7 +497,7 @@ function normalizeProviderEvent(raw: unknown): StreamEvent[] {
             id: createId('unknown-provider-event'),
             title: 'Evento no reconocido',
             concept: eventType || 'sin tipo',
-            body: stringifyUnknown(raw),
+            body: stringifyUnknown(raw).slice(0, 2500),
             timestamp: timestamp(),
           },
         },
@@ -505,40 +506,131 @@ function normalizeProviderEvent(raw: unknown): StreamEvent[] {
   }
 }
 
+function extractCompleteObjectsFromArray(text: string): string[] {
+  const candidate = extractJsonCandidate(text);
+  const start = candidate.indexOf('[');
+
+  if (start === -1) {
+    return [];
+  }
+
+  const objects: string[] = [];
+  let objectStart = -1;
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let index = start + 1; index < candidate.length; index += 1) {
+    const char = candidate[index];
+
+    if (escaped) {
+      escaped = false;
+      continue;
+    }
+
+    if (char === '\\') {
+      escaped = true;
+      continue;
+    }
+
+    if (char === '"') {
+      inString = !inString;
+      continue;
+    }
+
+    if (inString) {
+      continue;
+    }
+
+    if (char === '{') {
+      if (depth === 0) {
+        objectStart = index;
+      }
+
+      depth += 1;
+      continue;
+    }
+
+    if (char === '}') {
+      depth -= 1;
+
+      if (depth === 0 && objectStart >= 0) {
+        objects.push(candidate.slice(objectStart, index + 1));
+        objectStart = -1;
+      }
+    }
+  }
+
+  return objects;
+}
+
+function recoverPartialProviderEvents(text: string): StreamEvent[] {
+  const objects = extractCompleteObjectsFromArray(text);
+
+  if (objects.length === 0) {
+    return [];
+  }
+
+  const recovered: StreamEvent[] = [];
+
+  for (const objectText of objects) {
+    try {
+      const parsed = JSON.parse(repairJsonCandidate(objectText)) as unknown;
+      recovered.push(...normalizeProviderEvent(parsed));
+    } catch {
+      // Ignorar objetos incompletos.
+    }
+  }
+
+  if (recovered.length === 0) {
+    return [];
+  }
+
+  recovered.push({
+    type: 'activity',
+    item: {
+      id: createId('partial-recovery'),
+      level: 'warning',
+      message: 'Se recuperaron eventos completos de una respuesta parcialmente cortada.',
+      timestamp: timestamp(),
+    },
+  });
+
+  recovered.push({
+    type: 'done',
+    summary: 'Evaluación recuperada parcialmente.',
+    timestamp: timestamp(),
+  });
+
+  return recovered;
+}
+
 export function buildAgentInstruction(input: NormalizedAgentRunInput): string {
   const files =
     input.files?.map((file) => `- ${file.id}: ${file.path} (${file.language})`).join('\n') ??
     'No se enviaron archivos.';
 
-  return `Eres VACoder Agent OS.
+  return `Eres VACoder Agent OS. Responde SOLO JSON válido.
 
-Debes responder SOLO con JSON válido.
-No uses Markdown.
-No uses bloques \`\`\`json.
-No escribas texto antes ni después del JSON.
-
-Formato obligatorio:
+Devuelve exactamente 4 eventos:
 [
   {
     "type": "plan",
     "title": "Plan de evaluación",
-    "steps": ["paso 1", "paso 2"]
+    "steps": [
+      "Analizar manifiesto",
+      "Detectar riesgos",
+      "Priorizar archivos",
+      "Entregar reporte final"
+    ]
   },
   {
     "type": "teacher",
     "message": {
       "id": "teacher-1",
-      "title": "Diagnóstico",
-      "concept": "Arquitectura",
-      "body": "explicación"
-    }
-  },
-  {
-    "type": "activity",
-    "item": {
-      "id": "activity-1",
-      "level": "info",
-      "message": "actividad"
+      "title": "Criterio de evaluación",
+      "concept": "Diagnóstico técnico",
+      "body": "Un párrafo breve sobre el criterio usado."
     }
   },
   {
@@ -547,7 +639,7 @@ Formato obligatorio:
       "id": "report-1",
       "title": "Reporte final",
       "kind": "report",
-      "body": "reporte en texto plano, no JSON anidado"
+      "body": "Diagnóstico completo en texto plano o Markdown simple."
     }
   },
   {
@@ -556,30 +648,29 @@ Formato obligatorio:
   }
 ]
 
-Objetivo del usuario:
-${input.prompt}
+Reglas:
+- JSON puro. Sin Markdown fuera del JSON.
+- Sin bloques de código.
+- Sin texto antes ni después.
+- No uses JSON anidado dentro de artifact.body.
+- artifact.body máximo 4500 caracteres.
+- Un solo artifact.
+- Un solo teacher.
+- No modifiques archivos en plan-only.
+- No emitas patch-file/create-file/delete-file/rename-file en plan-only.
+- No inventes fileId.
+- Si falta código fuente, dilo claramente en el reporte.
 
-Estilo de enseñanza: ${input.teachingStyle}
-Modo de ejecución: ${input.runMode}
-Máximo de pasos: ${input.maxSteps}
+Contexto:
+- Estilo: ${input.teachingStyle}
+- Modo: ${input.runMode}
+- Máximo de pasos: ${input.maxSteps}
 
 Archivos disponibles:
 ${files}
 
-Eventos permitidos:
-status, plan, teacher, activity, patch-file, create-file, delete-file, rename-file, select-file, terminal, test-result, build-result, diff, artifact, done, error.
-
-Reglas estrictas:
-1. No inventes fileId.
-2. Si no estás seguro, emite plan y artifact, no patch-file.
-3. Cada cambio debe explicar razón pedagógica.
-4. Si runMode es plan-only, NO emitas patch-file, create-file, delete-file ni rename-file.
-5. Para patch-file debes enviar contenido completo en "content", no unified diff.
-6. Si solo tienes unified diff, emite "diff" y "artifact", no patch-file.
-7. artifact.body debe ser texto plano o Markdown simple dentro de un string JSON válido.
-8. No pongas JSON anidado dentro de artifact.body.
-9. Escapa correctamente saltos de línea como \\n si usas texto largo.
-10. Devuelve JSON puro. Sin \`\`\`, sin texto antes, sin texto después.
+Solicitud:
+${input.prompt}
 `;
 }
 
@@ -601,7 +692,11 @@ export function eventsFromProviderText(text: string): StreamEvent[] {
       return normalizeProviderEvent(parsed);
     }
   } catch {
-    // Fallback below.
+    const partial = recoverPartialProviderEvents(trimmed);
+
+    if (partial.length > 0) {
+      return partial;
+    }
   }
 
   const recovered = recoverUsefulProviderText(trimmed);
@@ -613,7 +708,7 @@ export function eventsFromProviderText(text: string): StreamEvent[] {
         id: createId('provider-text'),
         title: 'Respuesta recuperada del proveedor',
         concept: 'Salida parcialmente estructurada',
-        body: recovered.slice(0, 4000),
+        body: recovered.slice(0, 3000),
         timestamp: timestamp(),
       },
     },
@@ -629,7 +724,7 @@ export function eventsFromProviderText(text: string): StreamEvent[] {
     },
     {
       type: 'done',
-      summary: 'Proveedor respondió. La salida fue recuperada como reporte porque no cumplió completamente el contrato JSON.',
+      summary: 'Proveedor respondió. La salida fue recuperada como reporte.',
       timestamp: timestamp(),
     },
   ];

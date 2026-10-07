@@ -1,20 +1,24 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { ActivityPanel } from '@/components/activity-panel';
 import { CodePanel } from '@/components/code-panel';
 import { ControlBar } from '@/components/control-bar';
 import { DiffPanel } from '@/components/diff-panel';
+import { LiveProjectView } from '@/components/live-project-view';
+import { ProductionRunPanel } from '@/components/production-run-panel';
+import { ProjectBuilderPanel } from '@/components/project-builder-panel';
 import { ProjectScanPanel } from '@/components/project-scan-panel';
 import { RunStatusBar } from '@/components/run-status-bar';
 import { TeacherPanel } from '@/components/teacher-panel';
 import { TerminalPanel } from '@/components/terminal-panel';
+import { useAgentRun } from '@/hooks/use-agent-run';
 import { applyStreamEventToState } from '@/lib/apply-stream-event';
 import { createEvaluateProjectPrompt } from '@/lib/prompts/evaluate-project';
+import type { ProjectManifest } from '@/lib/project-manifest';
 import { cloneFiles, patchFile, revertFile } from '@/lib/project-state';
 import { scanProjectFromClient } from '@/lib/project-scan-client';
 import { SAMPLE_FILES } from '@/lib/sample-project';
-import { useAgentRun } from '@/hooks/use-agent-run';
 import type {
   ActivityLog,
   FinalArtifact,
@@ -25,7 +29,27 @@ import type {
   TeachingStyle,
   WorkspaceState,
 } from '@/lib/types';
-import type { ProjectManifest } from '@/lib/project-manifest';
+
+const INITIAL_TIMESTAMP = '2026-01-01T00:00:00.000Z';
+
+const DEFAULT_AGENT_PROMPT =
+  'Construye un dashboard CRM moderno y explícame cada cambio en vivo.';
+
+const DEFAULT_PROJECT_ROOT = 'C:\\Users\\martin\\Desktop\\VSC\\BestS\\Coder';
+
+const DEFAULT_PRODUCTION_CWD = 'C:/Users/martin/Desktop/VSC/APPS/Visas';
+
+const DEFAULT_PRODUCTION_PORT = 3001;
+
+const SCAN_OPTIONS = {
+  maxDepth: 12,
+  maxFiles: 15000,
+  maxImportantFiles: 180,
+  maxFileSizeBytes: 180000,
+  includeContentPreview: true,
+  contentPreviewMaxChars: 8000,
+  includeLockFiles: false,
+} as const;
 
 const defaultMessages: TeacherMessage[] = [
   {
@@ -35,8 +59,6 @@ const defaultMessages: TeacherMessage[] = [
     body: 'Ejecuta el agente. El sistema separa streaming, eventos, diff, terminal, scanner y enseñanza para evitar desorden antes de meter multi-agentes.',
   },
 ];
-
-const INITIAL_TIMESTAMP = '2026-01-01T00:00:00.000Z';
 
 const defaultLogs: ActivityLog[] = [
   {
@@ -81,38 +103,66 @@ function createLog(level: ActivityLog['level'], message: string): ActivityLog {
   };
 }
 
+function createManifestArtifact(manifest: ProjectManifest): FinalArtifact {
+  return {
+    id: `manifest-${crypto.randomUUID()}`,
+    title: 'Manifiesto de proyecto generado',
+    body: `${manifest.projectName}: ${manifest.stats.totalFiles} archivos totales, ${manifest.stats.includedFiles} incluidos, ${manifest.stats.ignoredFiles} ignorados.`,
+    kind: 'summary',
+  };
+}
+
+function createManifestTeacherMessage(): TeacherMessage {
+  return {
+    id: `teacher-${crypto.randomUUID()}`,
+    title: 'Evaluación por manifiesto',
+    concept: 'Project Scanner',
+    body: 'El agente recibirá un mapa del proyecto en vez de todos los archivos. Esto evita reventar contexto y permite auditar proyectos grandes con más control.',
+  };
+}
+
 export function Workspace() {
   const [state, setState] = useState<WorkspaceState>(() => createInitialState());
-  const [prompt, setPrompt] = useState('Construye un dashboard CRM moderno y explícame cada cambio en vivo.');
+  const [prompt, setPrompt] = useState(DEFAULT_AGENT_PROMPT);
   const [provider, setProvider] = useState<Provider>('demo');
   const [teachingStyle, setTeachingStyle] = useState<TeachingStyle>('mentor');
   const [runMode, setRunMode] = useState<RunMode>('safe-patch');
   const [model, setModel] = useState('');
-  const [projectRoot, setProjectRoot] = useState('C:\\Users\\martin\\Desktop\\VSC\\BestS\\Coder');
+  const [projectRoot, setProjectRoot] = useState(DEFAULT_PROJECT_ROOT);
   const [projectManifest, setProjectManifest] = useState<ProjectManifest | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [scanError, setScanError] = useState<string | null>(null);
 
-  const selectedFile = useMemo(
-    () => state.files.find((file) => file.id === state.selectedFileId) ?? state.files[0],
-    [state.files, state.selectedFileId],
-  );
+  const selectedFile = useMemo(() => {
+    return state.files.find((file) => file.id === state.selectedFileId) ?? state.files[0];
+  }, [state.files, state.selectedFileId]);
 
-  const changedFiles = useMemo(() => state.files.filter((file) => file.dirty).length, [state.files]);
+  const changedFiles = useMemo(() => {
+    return state.files.filter((file) => file.dirty).length;
+  }, [state.files]);
 
-  const handleEvent = (event: StreamEvent) => {
+  const handleEvent = useCallback((event: StreamEvent) => {
     setState((previous) => applyStreamEventToState(previous, event));
-  };
+  }, []);
 
-  const { isRunning, run, stop } = useAgentRun({ onEvent: handleEvent });
+  const { isRunning, run, stop } = useAgentRun({
+    onEvent: handleEvent,
+  });
 
-  const resetWorkspace = () => {
+  const appendActivityLog = useCallback((level: ActivityLog['level'], message: string) => {
+    setState((previous) => ({
+      ...previous,
+      activityLogs: [...previous.activityLogs, createLog(level, message)],
+    }));
+  }, []);
+
+  const resetWorkspace = useCallback(() => {
     setState(createInitialState());
     setProjectManifest(null);
     setScanError(null);
-  };
+  }, []);
 
-  const runAgent = () => {
+  const runAgent = useCallback(() => {
     run({
       prompt,
       provider,
@@ -122,34 +172,37 @@ export function Workspace() {
       files: state.files,
       maxSteps: 12,
     });
-  };
+  }, [model, prompt, provider, run, runMode, state.files, teachingStyle]);
 
-  const scanCurrentProject = async () => {
+  const scanCurrentProject = useCallback(async () => {
+    const root = projectRoot.trim() || undefined;
+
     setIsScanning(true);
     setScanError(null);
+
     setState((previous) => ({
       ...previous,
       status: 'Escaneando proyecto…',
-      activityLogs: [...previous.activityLogs, createLog('info', `$ scanner --root "${projectRoot || '.'}"`)],
+      activityLogs: [
+        ...previous.activityLogs,
+        createLog('info', `$ scanner --root "${root || '.'}"`),
+      ],
     }));
 
     try {
       const result = await scanProjectFromClient({
-        projectRoot: projectRoot.trim() || undefined,
-        maxDepth: 12,
-        maxFiles: 15000,
-        maxImportantFiles: 180,
-        maxFileSizeBytes: 180000,
-        includeContentPreview: true,
-        contentPreviewMaxChars: 8000,
-        includeLockFiles: false,
+        projectRoot: root,
+        ...SCAN_OPTIONS,
       });
 
       if (!result.ok) {
         throw new Error(result.error);
       }
 
-      setProjectManifest(result.manifest);
+      const { manifest } = result;
+
+      setProjectManifest(manifest);
+
       setState((previous) => ({
         ...previous,
         status: 'Proyecto escaneado',
@@ -157,22 +210,20 @@ export function Workspace() {
           ...previous.activityLogs,
           createLog(
             'success',
-            `$ manifest listo → ${result.manifest.stats.totalFiles} archivos, ${result.manifest.stats.includedFiles} incluidos`,
+            `$ manifest listo → ${manifest.stats.totalFiles} archivos, ${manifest.stats.includedFiles} incluidos`,
           ),
         ],
         artifacts: [
           ...previous.artifacts.filter((artifact) => artifact.id !== 'seed'),
-          {
-            id: `manifest-${crypto.randomUUID()}`,
-            title: 'Manifiesto de proyecto generado',
-            body: `${result.manifest.projectName}: ${result.manifest.stats.totalFiles} archivos totales, ${result.manifest.stats.includedFiles} incluidos, ${result.manifest.stats.ignoredFiles} ignorados.`,
-            kind: 'summary',
-          },
+          createManifestArtifact(manifest),
         ],
       }));
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Fallo inesperado escaneando proyecto.';
+      const message =
+        error instanceof Error ? error.message : 'Fallo inesperado escaneando proyecto.';
+
       setScanError(message);
+
       setState((previous) => ({
         ...previous,
         status: 'Error escaneando proyecto',
@@ -181,45 +232,48 @@ export function Workspace() {
     } finally {
       setIsScanning(false);
     }
-  };
+  }, [projectRoot]);
 
-  const loadEvaluatePrompt = () => {
+  const loadEvaluatePrompt = useCallback(() => {
     if (!projectManifest) {
+      appendActivityLog('warning', 'No hay manifiesto cargado. Escanea un proyecto primero.');
       return;
     }
 
     setPrompt(createEvaluateProjectPrompt(projectManifest));
     setRunMode('plan-only');
+
     setState((previous) => ({
       ...previous,
       status: 'Prompt de evaluación cargado',
-      activityLogs: [...previous.activityLogs, createLog('info', '$ prompt cargado → evaluación por manifiesto')],
-      teacherMessages: [
-        ...previous.teacherMessages,
-        {
-          id: `teacher-${crypto.randomUUID()}`,
-          title: 'Evaluación por manifiesto',
-          concept: 'Project Scanner',
-          body: 'El agente recibirá un mapa del proyecto en vez de todos los archivos. Esto evita reventar contexto y permite auditar proyectos grandes con más control.',
-        },
+      activityLogs: [
+        ...previous.activityLogs,
+        createLog('info', '$ prompt cargado → evaluación por manifiesto'),
       ],
+      teacherMessages: [...previous.teacherMessages, createManifestTeacherMessage()],
     }));
-  };
+  }, [appendActivityLog, projectManifest]);
 
-  const updateFileContent = (fileId: string, content: string) => {
+  const updateFileContent = useCallback((fileId: string, content: string) => {
     setState((previous) => ({
       ...previous,
       files: patchFile(previous.files, fileId, content),
     }));
-  };
+  }, []);
 
-  const selectFile = (fileId: string) => {
-    setState((previous) => ({ ...previous, selectedFileId: fileId }));
-  };
+  const selectFile = useCallback((fileId: string) => {
+    setState((previous) => ({
+      ...previous,
+      selectedFileId: fileId,
+    }));
+  }, []);
 
-  const handleRevertFile = (fileId: string) => {
-    setState((previous) => ({ ...previous, files: revertFile(previous.files, fileId) }));
-  };
+  const handleRevertFile = useCallback((fileId: string) => {
+    setState((previous) => ({
+      ...previous,
+      files: revertFile(previous.files, fileId),
+    }));
+  }, []);
 
   return (
     <main className="shell">
@@ -231,10 +285,16 @@ export function Workspace() {
             validación y profesor en vivo antes de pasar a multi-agentes.
           </p>
         </div>
+
         <div className="header-badge">project scanner conectado</div>
       </header>
 
-      <RunStatusBar status={state.status} isRunning={isRunning || isScanning} changedFiles={changedFiles} logs={state.activityLogs.length} />
+      <RunStatusBar
+        status={state.status}
+        isRunning={isRunning || isScanning}
+        changedFiles={changedFiles}
+        logs={state.activityLogs.length}
+      />
 
       <ProjectScanPanel
         projectRoot={projectRoot}
@@ -244,6 +304,13 @@ export function Workspace() {
         onProjectRootChange={setProjectRoot}
         onScan={scanCurrentProject}
         onLoadEvaluatePrompt={loadEvaluatePrompt}
+      />
+
+      <ProjectBuilderPanel />
+
+      <ProductionRunPanel
+        defaultCwd={DEFAULT_PRODUCTION_CWD}
+        defaultPort={DEFAULT_PRODUCTION_PORT}
       />
 
       <ControlBar
@@ -263,6 +330,8 @@ export function Workspace() {
         onReset={resetWorkspace}
       />
 
+      <LiveProjectView />
+
       <section className="workspace-grid">
         <CodePanel
           files={state.files}
@@ -273,18 +342,32 @@ export function Workspace() {
         />
 
         <div className="right-stack">
-          <TeacherPanel status={state.status} messages={state.teacherMessages} plan={state.lastPlan} />
-          <ActivityPanel logs={state.activityLogs} artifacts={state.artifacts} />
+          <TeacherPanel
+            status={state.status}
+            messages={state.teacherMessages}
+            plan={state.lastPlan}
+          />
+
+          <ActivityPanel
+            logs={state.activityLogs}
+            artifacts={state.artifacts}
+          />
         </div>
       </section>
 
       <section className="workspace-grid lower-grid">
         <DiffPanel file={selectedFile} />
-        <TerminalPanel terminals={state.terminalOutputs} tests={state.testResults} builds={state.buildResults} />
+
+        <TerminalPanel
+          terminals={state.terminalOutputs}
+          tests={state.testResults}
+          builds={state.buildResults}
+        />
       </section>
 
       <p className="footer-note">
-        Consejo: escanea primero, carga prompt de evaluación, ejecuta en modo solo planificar y luego pasa a cambios seguros.
+        Consejo: escanea primero, carga prompt de evaluación, ejecuta en modo solo planificar y
+        luego pasa a cambios seguros.
       </p>
     </main>
   );

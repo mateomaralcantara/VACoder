@@ -1,0 +1,566 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Scanner Coder 10/10</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f7fa;
+  color: #111827;
+  padding: 28px;
+}
+.card {
+  background: white;
+  border-radius: 18px;
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: 0 12px 35px rgba(15,23,42,.08);
+}
+.score {
+  font-size: 64px;
+  line-height: 1;
+  font-weight: 900;
+  color: #0B1F3A;
+}
+.badge {
+  display: inline-flex;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(215, 38, 56, .12);
+  color: #D72638;
+  font-weight: 900;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+th {
+  background: #0B1F3A;
+  color: white;
+  text-align: left;
+  padding: 10px;
+}
+td {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 10px;
+  vertical-align: top;
+}
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  font-family: Consolas, monospace;
+  font-size: 12px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.metric {
+  background: #f8fafc;
+  border-radius: 14px;
+  padding: 14px;
+}
+.metric span {
+  color: #6b7280;
+  display: block;
+  margin-bottom: 6px;
+}
+.metric strong {
+  font-size: 24px;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <span class="badge">VACoder Agent OS</span>
+  <h1>Scanner Coder 10/10</h1>
+  <p><strong>Proyecto:</strong> C:\Users\martin\Desktop\VSC\BestS\Coder</p>
+  <p><strong>Fecha:</strong> 2026-08-16 17:29:13</p>
+</div>
+
+<div class="card">
+  <div class="score">7.9 / 10</div>
+  <h2>7/10 funcional avanzado</h2>
+
+  <div class="grid">
+    <div class="metric">
+      <span>Puntos</span>
+      <strong>115 / 145</strong>
+    </div>
+    <div class="metric">
+      <span>Porcentaje</span>
+      <strong>79.31%</strong>
+    </div>
+    <div class="metric">
+      <span>Fallas</span>
+      <strong>10</strong>
+    </div>
+    <div class="metric">
+      <span>Warnings</span>
+      <strong>1</strong>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Recomendaciones</h2>
+  <ul>
+    <li>Corregir: [Validation] npm run typecheck - &gt; ide-tutor-agent@0.1.0 typecheck
+&gt; tsc --noEmit
+
+app/api/project/patch/apply/route.ts(520,3): error TS2322: Type &#39;({ path: string; action: &quot;delete&quot;; content?: undefined; } | { path: string; content: string; action: &quot;upsert&quot;; } | null)[]&#39; is not assignable to type &#39;FileOperation[]&#39;.
+  Type &#39;{ path: string; action: &quot;delete&quot;; content?: undefined; } | { path: string; content: string; action: &quot;upsert&quot;; } | null&#39; is not assignable to type &#39;FileOperation&#39;.
+    Type &#39;null&#39; is not assignable to type &#39;FileOperation&#39;.
+app/api/project/patch/apply/route.ts(545,29): error TS2677: A type predicate&#39;s type must be assignable to its parameter&#39;s type.
+  Type &#39;FileOperation&#39; is not assignable to type &#39;{ path: string; action: &quot;delete&quot;; content?: undefined; } | { path: string; content: string; action: &quot;upsert&quot;; } | null&#39;.
+    Type &#39;FileOperation&#39; is not assignable to type &#39;{ path: string; action: &quot;delete&quot;; content?: undefined; } | { path: string; content: string; action: &quot;upsert&quot;; }&#39;.
+      Type &#39;FileOperation&#39; is not assignable to type &#39;{ path: string; content: string; action: &quot;upsert&quot;; }&#39;.
+        Types of property &#39;content&#39; are incompatible.
+          Type &#39;string | undefined&#39; is not assignable to type &#39;string&#39;.
+            Type &#39;undefined&#39; is not assignable to type &#39;string&#39;.</li>
+<li>Corregir: [Validation] npm run build - &gt; ide-tutor-agent@0.1.0 build
+&gt; next build
+
+   &#226;–&#178; Next.js 15.5.18
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ &#226;œ“ Compiled successfully in 4.1s
+   Linting and checking validity of types ...
+
+Failed to compile.
+
+./app/api/project/patch/apply/route.ts:520:3
+Type error: Type &#39;({ path: string; action: &quot;delete&quot;; content?: undefined; } | { path: string; content: string; action: &quot;upsert&quot;; } | null)[]&#39; is not assignable to type &#39;FileOperation[]&#39;.
+  Type &#39;{ path: string; action: &quot;delete&quot;; content?: undefined; } | { path: string; content: string; action: &quot;upsert&quot;; } | null&#39; is not assignable to type &#39;FileOperation&#39;.
+    Type &#39;null&#39; is not assignable to type &#39;FileOperation&#39;.
+
+[0m [90m 518 |[39m   }
+ [90m 519 |[39m
+[31m[1m&gt;[22m[39m[90m 520 |[39m   [36mreturn[39m files
+ [90m     |[39m   [31m[1m^[22m[39m
+ [90m 521 |[39m     [33m.[39mmap((item) [33m=&gt;[39m {
+ [90m 522 |[39m       [36mif[39m ([33m![39mitem [33m||[39m [36mtypeof[39m item [33m!==[39m [32m&quot;object&quot;[39m) {
+ [90m 523 |[39m         [36mreturn[39m [36mnull[39m[33m;[39m[0m
+Next.js build worker exited with code: 1 and signal: null</li>
+<li>Corregir: [Live API] http://localhost:3000/api/project/production/status - Error en el servidor remoto: (500) Error interno del servidor.</li>
+<li>Corregir: [Live API] http://localhost:3000/api/project/scan - Error en el servidor remoto: (500) Error interno del servidor.</li>
+<li>Corregir: [Live API] http://localhost:3000/api/project/snapshot - Error en el servidor remoto: (500) Error interno del servidor.</li>
+<li>Corregir: [Live API] http://localhost:3000/api/project/diff - Error en el servidor remoto: (500) Error interno del servidor.</li>
+<li>Corregir: [Live API] http://localhost:3000/api/project/validate - Error en el servidor remoto: (500) Error interno del servidor.</li>
+<li>Corregir: [Live API] http://localhost:3000/api/project/rollback - Error en el servidor remoto: (500) Error interno del servidor.</li>
+<li>Corregir: [Live API] http://localhost:3000/api/project/patch/apply - Error en el servidor remoto: (500) Error interno del servidor.</li>
+<li>Corregir: [Live API] http://localhost:3000/api/agent/stream - Error en el servidor remoto: (500) Error interno del servidor.</li>
+
+  </ul>
+</div>
+
+<div class="card">
+  <h2>Detalle tecnico</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Seccion</th>
+        <th>Item</th>
+        <th>Estado</th>
+        <th>Puntos</th>
+        <th>Detalles</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+  <td>Package</td>
+  <td>package.json existe</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>package.json encontrado.</pre></td>
+</tr><tr>
+  <td>Package</td>
+  <td>script dev</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>1 / 1</td>
+  <td><pre>npm run dev existe.</pre></td>
+</tr><tr>
+  <td>Package</td>
+  <td>script typecheck</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>npm run typecheck existe.</pre></td>
+</tr><tr>
+  <td>Package</td>
+  <td>script build</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>npm run build existe.</pre></td>
+</tr><tr>
+  <td>Package</td>
+  <td>Next.js dependency</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>1 / 1</td>
+  <td><pre>Next detectado.</pre></td>
+</tr><tr>
+  <td>Package</td>
+  <td>TypeScript dependency</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>1 / 1</td>
+  <td><pre>TypeScript detectado.</pre></td>
+</tr><tr>
+  <td>Package</td>
+  <td>React dependency</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>1 / 1</td>
+  <td><pre>React detectado.</pre></td>
+</tr><tr>
+  <td>API Routes</td>
+  <td>Agent Stream</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>app\api\agent\stream\route.ts</pre></td>
+</tr><tr>
+  <td>API Routes</td>
+  <td>Builder Create</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>app\api\project\builder\create\route.ts</pre></td>
+</tr><tr>
+  <td>API Routes</td>
+  <td>Builder Preview</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>app\api\project\builder\preview\route.ts</pre></td>
+</tr><tr>
+  <td>API Routes</td>
+  <td>Production Status</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>app\api\project\production\status\route.ts</pre></td>
+</tr><tr>
+  <td>API Routes</td>
+  <td>Patch Apply</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>4 / 4</td>
+  <td><pre>app\api\project\patch\apply\route.ts</pre></td>
+</tr><tr>
+  <td>API Routes</td>
+  <td>Project Scan</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>app\api\project\scan\route.ts</pre></td>
+</tr><tr>
+  <td>API Routes</td>
+  <td>Snapshot</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>app\api\project\snapshot\route.ts</pre></td>
+</tr><tr>
+  <td>API Routes</td>
+  <td>Diff</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>app\api\project\diff\route.ts</pre></td>
+</tr><tr>
+  <td>API Routes</td>
+  <td>Validate</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>app\api\project\validate\route.ts</pre></td>
+</tr><tr>
+  <td>API Routes</td>
+  <td>Rollback</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>app\api\project\rollback\route.ts</pre></td>
+</tr><tr>
+  <td>API Routes</td>
+  <td>Not Found page</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>1 / 1</td>
+  <td><pre>app\not-found.tsx</pre></td>
+</tr><tr>
+  <td>Core</td>
+  <td>VACoder Core</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>5 / 5</td>
+  <td><pre>lib\vacoder\core.ts</pre></td>
+</tr><tr>
+  <td>Core</td>
+  <td>Proteccion de ruta absoluta</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>lib\vacoder\core.ts contiene assertSafeProjectPath</pre></td>
+</tr><tr>
+  <td>Core</td>
+  <td>Proteccion de ruta relativa</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>lib\vacoder\core.ts contiene assertSafeRelativePath</pre></td>
+</tr><tr>
+  <td>Core</td>
+  <td>Snapshot de proyecto</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>lib\vacoder\core.ts contiene snapshotProject</pre></td>
+</tr><tr>
+  <td>Core</td>
+  <td>Diff de snapshots</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>lib\vacoder\core.ts contiene diffSnapshots</pre></td>
+</tr><tr>
+  <td>Core</td>
+  <td>Backup automatico</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>lib\vacoder\core.ts contiene createBackup</pre></td>
+</tr><tr>
+  <td>Core</td>
+  <td>Rollback automatico</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>lib\vacoder\core.ts contiene rollbackBackup</pre></td>
+</tr><tr>
+  <td>Core</td>
+  <td>Validador typecheck/build</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>lib\vacoder\core.ts contiene validateProject</pre></td>
+</tr><tr>
+  <td>Core</td>
+  <td>Ejecucion de comandos</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>lib\vacoder\core.ts contiene runCommand</pre></td>
+</tr><tr>
+  <td>Core</td>
+  <td>Escritura real de archivos</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>lib\vacoder\core.ts contiene writeProjectFile</pre></td>
+</tr><tr>
+  <td>Core</td>
+  <td>Eliminacion controlada</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>lib\vacoder\core.ts contiene deleteProjectFile</pre></td>
+</tr><tr>
+  <td>Core</td>
+  <td>Timeout de comandos</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>lib\vacoder\core.ts contiene timeoutMs|timedOut|TIMEOUT</pre></td>
+</tr><tr>
+  <td>Patch Agent</td>
+  <td>Crea backup antes de modificar</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>app\api\project\patch\apply\route.ts contiene createBackup</pre></td>
+</tr><tr>
+  <td>Patch Agent</td>
+  <td>Rollback si falla validacion</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>app\api\project\patch\apply\route.ts contiene rollbackBackup</pre></td>
+</tr><tr>
+  <td>Patch Agent</td>
+  <td>Valida despues de modificar</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>app\api\project\patch\apply\route.ts contiene validateProject</pre></td>
+</tr><tr>
+  <td>Patch Agent</td>
+  <td>Escribe archivo real</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>app\api\project\patch\apply\route.ts contiene writeProjectFile</pre></td>
+</tr><tr>
+  <td>Patch Agent</td>
+  <td>Normaliza operaciones</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>app\api\project\patch\apply\route.ts contiene normalizeOperations</pre></td>
+</tr><tr>
+  <td>Patch Agent</td>
+  <td>Soporta files[] directos</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>app\api\project\patch\apply\route.ts contiene files</pre></td>
+</tr><tr>
+  <td>Patch Agent</td>
+  <td>Receta por prompt</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>1 / 1</td>
+  <td><pre>app\api\project\patch\apply\route.ts contiene promptRequestsBookReading</pre></td>
+</tr><tr>
+  <td>UI</td>
+  <td>Production Run Panel</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>components\production-run-panel.tsx</pre></td>
+</tr><tr>
+  <td>UI</td>
+  <td>Workspace principal</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>components\workspace.tsx</pre></td>
+</tr><tr>
+  <td>Production</td>
+  <td>Production Client</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>lib\production-client.ts</pre></td>
+</tr><tr>
+  <td>Production</td>
+  <td>Production Types</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>lib\production\types.ts</pre></td>
+</tr><tr>
+  <td>UI</td>
+  <td>Status seguro / events fallback</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>3 / 3</td>
+  <td><pre>components\production-run-panel.tsx contiene normalizeStatus</pre></td>
+</tr><tr>
+  <td>UI</td>
+  <td>Uso de safeStatus</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>components\production-run-panel.tsx contiene safeStatus</pre></td>
+</tr><tr>
+  <td>UI</td>
+  <td>Timeline de eventos</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>1 / 1</td>
+  <td><pre>components\production-run-panel.tsx contiene status.events|safeStatus.events</pre></td>
+</tr><tr>
+  <td>Security</td>
+  <td>Patrones peligrosos</td>
+  <td style="font-weight:800;color:#B45309;">WARN</td>
+  <td>2 / 8</td>
+  <td><pre>[{&quot;File&quot;:&quot;app\\globals.css&quot;,&quot;Risk&quot;:&quot;posible secreto hardcodeado&quot;},{&quot;File&quot;:&quot;scripts\\scanner-coder-10.ps1&quot;,&quot;Risk&quot;:&quot;eval()&quot;},{&quot;File&quot;:&quot;scripts\\scanner-coder-10.ps1&quot;,&quot;Risk&quot;:&quot;new Function()&quot;},{&quot;File&quot;:&quot;scripts\\scanner-coder-10.ps1&quot;,&quot;Risk&quot;:&quot;dangerouslySetInnerHTML&quot;},{&quot;File&quot;:&quot;scripts\\scanner-coder-10.ps1&quot;,&quot;Risk&quot;:&quot;posible secreto hardcodeado&quot;}]</pre></td>
+</tr><tr>
+  <td>Security</td>
+  <td>Raiz permitida APPS_ROOT</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>lib\vacoder\core.ts contiene APPS_ROOT</pre></td>
+</tr><tr>
+  <td>Security</td>
+  <td>Ignora carpetas peligrosas</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>lib\vacoder\core.ts contiene SKIP_DIRS</pre></td>
+</tr><tr>
+  <td>Security</td>
+  <td>No escanea basura pesada</td>
+  <td style="font-weight:800;color:#047857;">OK</td>
+  <td>2 / 2</td>
+  <td><pre>lib\vacoder\core.ts contiene node_modules|\.next|\.git</pre></td>
+</tr><tr>
+  <td>Validation</td>
+  <td>npm run typecheck</td>
+  <td style="font-weight:800;color:#B91C1C;">FAIL</td>
+  <td>0 / 8</td>
+  <td><pre>&gt; ide-tutor-agent@0.1.0 typecheck
+&gt; tsc --noEmit
+
+app/api/project/patch/apply/route.ts(520,3): error TS2322: Type &#39;({ path: string; action: &quot;delete&quot;; content?: undefined; } | { path: string; content: string; action: &quot;upsert&quot;; } | null)[]&#39; is not assignable to type &#39;FileOperation[]&#39;.
+  Type &#39;{ path: string; action: &quot;delete&quot;; content?: undefined; } | { path: string; content: string; action: &quot;upsert&quot;; } | null&#39; is not assignable to type &#39;FileOperation&#39;.
+    Type &#39;null&#39; is not assignable to type &#39;FileOperation&#39;.
+app/api/project/patch/apply/route.ts(545,29): error TS2677: A type predicate&#39;s type must be assignable to its parameter&#39;s type.
+  Type &#39;FileOperation&#39; is not assignable to type &#39;{ path: string; action: &quot;delete&quot;; content?: undefined; } | { path: string; content: string; action: &quot;upsert&quot;; } | null&#39;.
+    Type &#39;FileOperation&#39; is not assignable to type &#39;{ path: string; action: &quot;delete&quot;; content?: undefined; } | { path: string; content: string; action: &quot;upsert&quot;; }&#39;.
+      Type &#39;FileOperation&#39; is not assignable to type &#39;{ path: string; content: string; action: &quot;upsert&quot;; }&#39;.
+        Types of property &#39;content&#39; are incompatible.
+          Type &#39;string | undefined&#39; is not assignable to type &#39;string&#39;.
+            Type &#39;undefined&#39; is not assignable to type &#39;string&#39;.</pre></td>
+</tr><tr>
+  <td>Validation</td>
+  <td>npm run build</td>
+  <td style="font-weight:800;color:#B91C1C;">FAIL</td>
+  <td>0 / 12</td>
+  <td><pre>&gt; ide-tutor-agent@0.1.0 build
+&gt; next build
+
+   &#226;–&#178; Next.js 15.5.18
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ &#226;œ“ Compiled successfully in 4.1s
+   Linting and checking validity of types ...
+
+Failed to compile.
+
+./app/api/project/patch/apply/route.ts:520:3
+Type error: Type &#39;({ path: string; action: &quot;delete&quot;; content?: undefined; } | { path: string; content: string; action: &quot;upsert&quot;; } | null)[]&#39; is not assignable to type &#39;FileOperation[]&#39;.
+  Type &#39;{ path: string; action: &quot;delete&quot;; content?: undefined; } | { path: string; content: string; action: &quot;upsert&quot;; } | null&#39; is not assignable to type &#39;FileOperation&#39;.
+    Type &#39;null&#39; is not assignable to type &#39;FileOperation&#39;.
+
+[0m [90m 518 |[39m   }
+ [90m 519 |[39m
+[31m[1m&gt;[22m[39m[90m 520 |[39m   [36mreturn[39m files
+ [90m     |[39m   [31m[1m^[22m[39m
+ [90m 521 |[39m     [33m.[39mmap((item) [33m=&gt;[39m {
+ [90m 522 |[39m       [36mif[39m ([33m![39mitem [33m||[39m [36mtypeof[39m item [33m!==[39m [32m&quot;object&quot;[39m) {
+ [90m 523 |[39m         [36mreturn[39m [36mnull[39m[33m;[39m[0m
+Next.js build worker exited with code: 1 and signal: null</pre></td>
+</tr><tr>
+  <td>Live API</td>
+  <td>http://localhost:3000/api/project/production/status</td>
+  <td style="font-weight:800;color:#B91C1C;">FAIL</td>
+  <td>0 / 0.5</td>
+  <td><pre>Error en el servidor remoto: (500) Error interno del servidor.</pre></td>
+</tr><tr>
+  <td>Live API</td>
+  <td>http://localhost:3000/api/project/scan</td>
+  <td style="font-weight:800;color:#B91C1C;">FAIL</td>
+  <td>0 / 0.5</td>
+  <td><pre>Error en el servidor remoto: (500) Error interno del servidor.</pre></td>
+</tr><tr>
+  <td>Live API</td>
+  <td>http://localhost:3000/api/project/snapshot</td>
+  <td style="font-weight:800;color:#B91C1C;">FAIL</td>
+  <td>0 / 0.5</td>
+  <td><pre>Error en el servidor remoto: (500) Error interno del servidor.</pre></td>
+</tr><tr>
+  <td>Live API</td>
+  <td>http://localhost:3000/api/project/diff</td>
+  <td style="font-weight:800;color:#B91C1C;">FAIL</td>
+  <td>0 / 0.5</td>
+  <td><pre>Error en el servidor remoto: (500) Error interno del servidor.</pre></td>
+</tr><tr>
+  <td>Live API</td>
+  <td>http://localhost:3000/api/project/validate</td>
+  <td style="font-weight:800;color:#B91C1C;">FAIL</td>
+  <td>0 / 0.5</td>
+  <td><pre>Error en el servidor remoto: (500) Error interno del servidor.</pre></td>
+</tr><tr>
+  <td>Live API</td>
+  <td>http://localhost:3000/api/project/rollback</td>
+  <td style="font-weight:800;color:#B91C1C;">FAIL</td>
+  <td>0 / 0.5</td>
+  <td><pre>Error en el servidor remoto: (500) Error interno del servidor.</pre></td>
+</tr><tr>
+  <td>Live API</td>
+  <td>http://localhost:3000/api/project/patch/apply</td>
+  <td style="font-weight:800;color:#B91C1C;">FAIL</td>
+  <td>0 / 0.5</td>
+  <td><pre>Error en el servidor remoto: (500) Error interno del servidor.</pre></td>
+</tr><tr>
+  <td>Live API</td>
+  <td>http://localhost:3000/api/agent/stream</td>
+  <td style="font-weight:800;color:#B91C1C;">FAIL</td>
+  <td>0 / 0.5</td>
+  <td><pre>Error en el servidor remoto: (500) Error interno del servidor.</pre></td>
+</tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

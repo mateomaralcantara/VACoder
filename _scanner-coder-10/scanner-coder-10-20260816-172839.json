@@ -1,0 +1,490 @@
+﻿{
+    "Project":  "VACoder Agent OS / Coder",
+    "Root":  "C:\\Users\\martin\\Desktop\\VSC\\BestS\\Coder",
+    "GeneratedAt":  "2026-08-16 17:29:13",
+    "Score10":  7.9,
+    "Score100":  79.31,
+    "EarnedPoints":  115,
+    "MaxPoints":  145,
+    "Grade":  "7/10 funcional avanzado",
+    "FailCount":  10,
+    "WarnCount":  1,
+    "Findings":  [
+                     {
+                         "Section":  "Package",
+                         "Item":  "package.json existe",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "package.json encontrado."
+                     },
+                     {
+                         "Section":  "Package",
+                         "Item":  "script dev",
+                         "Status":  "OK",
+                         "Points":  1,
+                         "Max":  1,
+                         "Details":  "npm run dev existe."
+                     },
+                     {
+                         "Section":  "Package",
+                         "Item":  "script typecheck",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "npm run typecheck existe."
+                     },
+                     {
+                         "Section":  "Package",
+                         "Item":  "script build",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "npm run build existe."
+                     },
+                     {
+                         "Section":  "Package",
+                         "Item":  "Next.js dependency",
+                         "Status":  "OK",
+                         "Points":  1,
+                         "Max":  1,
+                         "Details":  "Next detectado."
+                     },
+                     {
+                         "Section":  "Package",
+                         "Item":  "TypeScript dependency",
+                         "Status":  "OK",
+                         "Points":  1,
+                         "Max":  1,
+                         "Details":  "TypeScript detectado."
+                     },
+                     {
+                         "Section":  "Package",
+                         "Item":  "React dependency",
+                         "Status":  "OK",
+                         "Points":  1,
+                         "Max":  1,
+                         "Details":  "React detectado."
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Agent Stream",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "app\\api\\agent\\stream\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Builder Create",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "app\\api\\project\\builder\\create\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Builder Preview",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "app\\api\\project\\builder\\preview\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Production Status",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\production\\status\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Patch Apply",
+                         "Status":  "OK",
+                         "Points":  4,
+                         "Max":  4,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Project Scan",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\scan\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Snapshot",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\snapshot\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Diff",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\diff\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Validate",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\validate\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Rollback",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\rollback\\route.ts"
+                     },
+                     {
+                         "Section":  "API Routes",
+                         "Item":  "Not Found page",
+                         "Status":  "OK",
+                         "Points":  1,
+                         "Max":  1,
+                         "Details":  "app\\not-found.tsx"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "VACoder Core",
+                         "Status":  "OK",
+                         "Points":  5,
+                         "Max":  5,
+                         "Details":  "lib\\vacoder\\core.ts"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Proteccion de ruta absoluta",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene assertSafeProjectPath"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Proteccion de ruta relativa",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene assertSafeRelativePath"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Snapshot de proyecto",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene snapshotProject"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Diff de snapshots",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene diffSnapshots"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Backup automatico",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene createBackup"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Rollback automatico",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene rollbackBackup"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Validador typecheck/build",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene validateProject"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Ejecucion de comandos",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\vacoder\\core.ts contiene runCommand"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Escritura real de archivos",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "lib\\vacoder\\core.ts contiene writeProjectFile"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Eliminacion controlada",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\vacoder\\core.ts contiene deleteProjectFile"
+                     },
+                     {
+                         "Section":  "Core",
+                         "Item":  "Timeout de comandos",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\vacoder\\core.ts contiene timeoutMs|timedOut|TIMEOUT"
+                     },
+                     {
+                         "Section":  "Patch Agent",
+                         "Item":  "Crea backup antes de modificar",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts contiene createBackup"
+                     },
+                     {
+                         "Section":  "Patch Agent",
+                         "Item":  "Rollback si falla validacion",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts contiene rollbackBackup"
+                     },
+                     {
+                         "Section":  "Patch Agent",
+                         "Item":  "Valida despues de modificar",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts contiene validateProject"
+                     },
+                     {
+                         "Section":  "Patch Agent",
+                         "Item":  "Escribe archivo real",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts contiene writeProjectFile"
+                     },
+                     {
+                         "Section":  "Patch Agent",
+                         "Item":  "Normaliza operaciones",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts contiene normalizeOperations"
+                     },
+                     {
+                         "Section":  "Patch Agent",
+                         "Item":  "Soporta files[] directos",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts contiene files"
+                     },
+                     {
+                         "Section":  "Patch Agent",
+                         "Item":  "Receta por prompt",
+                         "Status":  "OK",
+                         "Points":  1,
+                         "Max":  1,
+                         "Details":  "app\\api\\project\\patch\\apply\\route.ts contiene promptRequestsBookReading"
+                     },
+                     {
+                         "Section":  "UI",
+                         "Item":  "Production Run Panel",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "components\\production-run-panel.tsx"
+                     },
+                     {
+                         "Section":  "UI",
+                         "Item":  "Workspace principal",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "components\\workspace.tsx"
+                     },
+                     {
+                         "Section":  "Production",
+                         "Item":  "Production Client",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\production-client.ts"
+                     },
+                     {
+                         "Section":  "Production",
+                         "Item":  "Production Types",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\production\\types.ts"
+                     },
+                     {
+                         "Section":  "UI",
+                         "Item":  "Status seguro / events fallback",
+                         "Status":  "OK",
+                         "Points":  3,
+                         "Max":  3,
+                         "Details":  "components\\production-run-panel.tsx contiene normalizeStatus"
+                     },
+                     {
+                         "Section":  "UI",
+                         "Item":  "Uso de safeStatus",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "components\\production-run-panel.tsx contiene safeStatus"
+                     },
+                     {
+                         "Section":  "UI",
+                         "Item":  "Timeline de eventos",
+                         "Status":  "OK",
+                         "Points":  1,
+                         "Max":  1,
+                         "Details":  "components\\production-run-panel.tsx contiene status.events|safeStatus.events"
+                     },
+                     {
+                         "Section":  "Security",
+                         "Item":  "Patrones peligrosos",
+                         "Status":  "WARN",
+                         "Points":  2,
+                         "Max":  8,
+                         "Details":  "[{\"File\":\"app\\\\globals.css\",\"Risk\":\"posible secreto hardcodeado\"},{\"File\":\"scripts\\\\scanner-coder-10.ps1\",\"Risk\":\"eval()\"},{\"File\":\"scripts\\\\scanner-coder-10.ps1\",\"Risk\":\"new Function()\"},{\"File\":\"scripts\\\\scanner-coder-10.ps1\",\"Risk\":\"dangerouslySetInnerHTML\"},{\"File\":\"scripts\\\\scanner-coder-10.ps1\",\"Risk\":\"posible secreto hardcodeado\"}]"
+                     },
+                     {
+                         "Section":  "Security",
+                         "Item":  "Raiz permitida APPS_ROOT",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\vacoder\\core.ts contiene APPS_ROOT"
+                     },
+                     {
+                         "Section":  "Security",
+                         "Item":  "Ignora carpetas peligrosas",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\vacoder\\core.ts contiene SKIP_DIRS"
+                     },
+                     {
+                         "Section":  "Security",
+                         "Item":  "No escanea basura pesada",
+                         "Status":  "OK",
+                         "Points":  2,
+                         "Max":  2,
+                         "Details":  "lib\\vacoder\\core.ts contiene node_modules|\\.next|\\.git"
+                     },
+                     {
+                         "Section":  "Validation",
+                         "Item":  "npm run typecheck",
+                         "Status":  "FAIL",
+                         "Points":  0,
+                         "Max":  8,
+                         "Details":  "\u003e ide-tutor-agent@0.1.0 typecheck\n\u003e tsc --noEmit\n\napp/api/project/patch/apply/route.ts(520,3): error TS2322: Type \u0027({ path: string; action: \"delete\"; content?: undefined; } | { path: string; content: string; action: \"upsert\"; } | null)[]\u0027 is not assignable to type \u0027FileOperation[]\u0027.\r\n  Type \u0027{ path: string; action: \"delete\"; content?: undefined; } | { path: string; content: string; action: \"upsert\"; } | null\u0027 is not assignable to type \u0027FileOperation\u0027.\r\n    Type \u0027null\u0027 is not assignable to type \u0027FileOperation\u0027.\r\napp/api/project/patch/apply/route.ts(545,29): error TS2677: A type predicate\u0027s type must be assignable to its parameter\u0027s type.\r\n  Type \u0027FileOperation\u0027 is not assignable to type \u0027{ path: string; action: \"delete\"; content?: undefined; } | { path: string; content: string; action: \"upsert\"; } | null\u0027.\r\n    Type \u0027FileOperation\u0027 is not assignable to type \u0027{ path: string; action: \"delete\"; content?: undefined; } | { path: string; content: string; action: \"upsert\"; }\u0027.\r\n      Type \u0027FileOperation\u0027 is not assignable to type \u0027{ path: string; content: string; action: \"upsert\"; }\u0027.\r\n        Types of property \u0027content\u0027 are incompatible.\r\n          Type \u0027string | undefined\u0027 is not assignable to type \u0027string\u0027.\r\n            Type \u0027undefined\u0027 is not assignable to type \u0027string\u0027."
+                     },
+                     {
+                         "Section":  "Validation",
+                         "Item":  "npm run build",
+                         "Status":  "FAIL",
+                         "Points":  0,
+                         "Max":  12,
+                         "Details":  "\u003e ide-tutor-agent@0.1.0 build\n\u003e next build\n\n   â–² Next.js 15.5.18\n   - Environments: .env.local\n\n   Creating an optimized production build ...\n âœ“ Compiled successfully in 4.1s\n   Linting and checking validity of types ...\n\nFailed to compile.\n\n./app/api/project/patch/apply/route.ts:520:3\nType error: Type \u0027({ path: string; action: \"delete\"; content?: undefined; } | { path: string; content: string; action: \"upsert\"; } | null)[]\u0027 is not assignable to type \u0027FileOperation[]\u0027.\n  Type \u0027{ path: string; action: \"delete\"; content?: undefined; } | { path: string; content: string; action: \"upsert\"; } | null\u0027 is not assignable to type \u0027FileOperation\u0027.\n    Type \u0027null\u0027 is not assignable to type \u0027FileOperation\u0027.\n\n\u001b[0m \u001b[90m 518 |\u001b[39m   }\n \u001b[90m 519 |\u001b[39m\n\u001b[31m\u001b[1m\u003e\u001b[22m\u001b[39m\u001b[90m 520 |\u001b[39m   \u001b[36mreturn\u001b[39m files\n \u001b[90m     |\u001b[39m   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 521 |\u001b[39m     \u001b[33m.\u001b[39mmap((item) \u001b[33m=\u003e\u001b[39m {\n \u001b[90m 522 |\u001b[39m       \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39mitem \u001b[33m||\u001b[39m \u001b[36mtypeof\u001b[39m item \u001b[33m!==\u001b[39m \u001b[32m\"object\"\u001b[39m) {\n \u001b[90m 523 |\u001b[39m         \u001b[36mreturn\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m;\u001b[39m\u001b[0m\nNext.js build worker exited with code: 1 and signal: null"
+                     },
+                     {
+                         "Section":  "Live API",
+                         "Item":  "http://localhost:3000/api/project/production/status",
+                         "Status":  "FAIL",
+                         "Points":  0,
+                         "Max":  0.5,
+                         "Details":  "Error en el servidor remoto: (500) Error interno del servidor."
+                     },
+                     {
+                         "Section":  "Live API",
+                         "Item":  "http://localhost:3000/api/project/scan",
+                         "Status":  "FAIL",
+                         "Points":  0,
+                         "Max":  0.5,
+                         "Details":  "Error en el servidor remoto: (500) Error interno del servidor."
+                     },
+                     {
+                         "Section":  "Live API",
+                         "Item":  "http://localhost:3000/api/project/snapshot",
+                         "Status":  "FAIL",
+                         "Points":  0,
+                         "Max":  0.5,
+                         "Details":  "Error en el servidor remoto: (500) Error interno del servidor."
+                     },
+                     {
+                         "Section":  "Live API",
+                         "Item":  "http://localhost:3000/api/project/diff",
+                         "Status":  "FAIL",
+                         "Points":  0,
+                         "Max":  0.5,
+                         "Details":  "Error en el servidor remoto: (500) Error interno del servidor."
+                     },
+                     {
+                         "Section":  "Live API",
+                         "Item":  "http://localhost:3000/api/project/validate",
+                         "Status":  "FAIL",
+                         "Points":  0,
+                         "Max":  0.5,
+                         "Details":  "Error en el servidor remoto: (500) Error interno del servidor."
+                     },
+                     {
+                         "Section":  "Live API",
+                         "Item":  "http://localhost:3000/api/project/rollback",
+                         "Status":  "FAIL",
+                         "Points":  0,
+                         "Max":  0.5,
+                         "Details":  "Error en el servidor remoto: (500) Error interno del servidor."
+                     },
+                     {
+                         "Section":  "Live API",
+                         "Item":  "http://localhost:3000/api/project/patch/apply",
+                         "Status":  "FAIL",
+                         "Points":  0,
+                         "Max":  0.5,
+                         "Details":  "Error en el servidor remoto: (500) Error interno del servidor."
+                     },
+                     {
+                         "Section":  "Live API",
+                         "Item":  "http://localhost:3000/api/agent/stream",
+                         "Status":  "FAIL",
+                         "Points":  0,
+                         "Max":  0.5,
+                         "Details":  "Error en el servidor remoto: (500) Error interno del servidor."
+                     }
+                 ],
+    "Recommendations":  [
+                            "Corregir: [Validation] npm run typecheck - \u003e ide-tutor-agent@0.1.0 typecheck\n\u003e tsc --noEmit\n\napp/api/project/patch/apply/route.ts(520,3): error TS2322: Type \u0027({ path: string; action: \"delete\"; content?: undefined; } | { path: string; content: string; action: \"upsert\"; } | null)[]\u0027 is not assignable to type \u0027FileOperation[]\u0027.\r\n  Type \u0027{ path: string; action: \"delete\"; content?: undefined; } | { path: string; content: string; action: \"upsert\"; } | null\u0027 is not assignable to type \u0027FileOperation\u0027.\r\n    Type \u0027null\u0027 is not assignable to type \u0027FileOperation\u0027.\r\napp/api/project/patch/apply/route.ts(545,29): error TS2677: A type predicate\u0027s type must be assignable to its parameter\u0027s type.\r\n  Type \u0027FileOperation\u0027 is not assignable to type \u0027{ path: string; action: \"delete\"; content?: undefined; } | { path: string; content: string; action: \"upsert\"; } | null\u0027.\r\n    Type \u0027FileOperation\u0027 is not assignable to type \u0027{ path: string; action: \"delete\"; content?: undefined; } | { path: string; content: string; action: \"upsert\"; }\u0027.\r\n      Type \u0027FileOperation\u0027 is not assignable to type \u0027{ path: string; content: string; action: \"upsert\"; }\u0027.\r\n        Types of property \u0027content\u0027 are incompatible.\r\n          Type \u0027string | undefined\u0027 is not assignable to type \u0027string\u0027.\r\n            Type \u0027undefined\u0027 is not assignable to type \u0027string\u0027.",
+                            "Corregir: [Validation] npm run build - \u003e ide-tutor-agent@0.1.0 build\n\u003e next build\n\n   â–² Next.js 15.5.18\n   - Environments: .env.local\n\n   Creating an optimized production build ...\n âœ“ Compiled successfully in 4.1s\n   Linting and checking validity of types ...\n\nFailed to compile.\n\n./app/api/project/patch/apply/route.ts:520:3\nType error: Type \u0027({ path: string; action: \"delete\"; content?: undefined; } | { path: string; content: string; action: \"upsert\"; } | null)[]\u0027 is not assignable to type \u0027FileOperation[]\u0027.\n  Type \u0027{ path: string; action: \"delete\"; content?: undefined; } | { path: string; content: string; action: \"upsert\"; } | null\u0027 is not assignable to type \u0027FileOperation\u0027.\n    Type \u0027null\u0027 is not assignable to type \u0027FileOperation\u0027.\n\n\u001b[0m \u001b[90m 518 |\u001b[39m   }\n \u001b[90m 519 |\u001b[39m\n\u001b[31m\u001b[1m\u003e\u001b[22m\u001b[39m\u001b[90m 520 |\u001b[39m   \u001b[36mreturn\u001b[39m files\n \u001b[90m     |\u001b[39m   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 521 |\u001b[39m     \u001b[33m.\u001b[39mmap((item) \u001b[33m=\u003e\u001b[39m {\n \u001b[90m 522 |\u001b[39m       \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39mitem \u001b[33m||\u001b[39m \u001b[36mtypeof\u001b[39m item \u001b[33m!==\u001b[39m \u001b[32m\"object\"\u001b[39m) {\n \u001b[90m 523 |\u001b[39m         \u001b[36mreturn\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m;\u001b[39m\u001b[0m\nNext.js build worker exited with code: 1 and signal: null",
+                            "Corregir: [Live API] http://localhost:3000/api/project/production/status - Error en el servidor remoto: (500) Error interno del servidor.",
+                            "Corregir: [Live API] http://localhost:3000/api/project/scan - Error en el servidor remoto: (500) Error interno del servidor.",
+                            "Corregir: [Live API] http://localhost:3000/api/project/snapshot - Error en el servidor remoto: (500) Error interno del servidor.",
+                            "Corregir: [Live API] http://localhost:3000/api/project/diff - Error en el servidor remoto: (500) Error interno del servidor.",
+                            "Corregir: [Live API] http://localhost:3000/api/project/validate - Error en el servidor remoto: (500) Error interno del servidor.",
+                            "Corregir: [Live API] http://localhost:3000/api/project/rollback - Error en el servidor remoto: (500) Error interno del servidor.",
+                            "Corregir: [Live API] http://localhost:3000/api/project/patch/apply - Error en el servidor remoto: (500) Error interno del servidor.",
+                            "Corregir: [Live API] http://localhost:3000/api/agent/stream - Error en el servidor remoto: (500) Error interno del servidor."
+                        ]
+}

@@ -3,60 +3,39 @@ import { summarizeManifestForPrompt, type ProjectManifest } from '@/lib/project-
 export const EVALUATE_PROJECT_PROMPT = `
 Actúa como arquitecto senior, auditor técnico y profesor de código.
 
-Evalúa este proyecto completo sin hacer cambios todavía.
+Evalúa el proyecto usando SOLO el manifiesto. No modifiques archivos.
 
-Quiero un diagnóstico profesional con estas secciones:
+Entrega un diagnóstico profesional en español con estas secciones:
 
 1. Resumen ejecutivo:
-   - Qué tipo de proyecto es.
-   - Qué tan listo está.
-   - Qué riesgos principales tiene.
+- Tipo de proyecto.
+- Nivel de madurez.
+- Riesgos principales.
 
 2. Arquitectura:
-   - Estructura de carpetas.
-   - Separación de responsabilidades.
-   - Componentes principales.
-   - Flujo de datos.
+- Estructura.
+- Componentes clave.
+- Flujo probable de datos.
 
-3. Calidad del código:
-   - Imports.
-   - Tipos.
-   - Repetición.
-   - Manejo de errores.
-   - Estado global/local.
-   - Validaciones.
+3. Riesgos críticos:
+- Compilación.
+- Producción.
+- Seguridad.
+- Configuración.
 
-4. Riesgos críticos:
-   - Errores que impiden compilar.
-   - Errores que pueden romper producción.
-   - Riesgos de seguridad.
-   - Configuración incompleta.
+4. Archivos prioritarios:
+- Archivo.
+- Por qué importa.
+- Qué revisarías primero.
 
-5. Mejoras recomendadas:
-   - Cambios críticos.
-   - Cambios importantes.
-   - Cambios estéticos.
-   - Cambios futuros.
-
-6. Archivos prioritarios:
-   - Lista de archivos que deben modificarse primero.
-   - Por qué cada archivo importa.
-   - Qué cambio exacto harías.
-
-7. Plan de acción:
-   - Paso 1.
-   - Paso 2.
-   - Paso 3.
-   - Paso 4.
+5. Plan de acción:
+- 4 pasos concretos.
 
 Reglas:
-- No modifiques archivos todavía.
-- No inventes archivos que no existen.
-- Si falta información, dilo claramente.
-- Prioriza estabilidad antes que diseño.
-- Explica como profesor, pero con criterio de producción.
-- Usa el manifiesto como mapa del proyecto.
-- Si el proyecto es grande, recomienda evaluación por lotes.
+- No inventes archivos.
+- Si falta código fuente, dilo claramente.
+- Prioriza estabilidad, seguridad y build.
+- Sé directo, técnico y útil.
 `.trim();
 
 export function createEvaluateProjectPrompt(manifest: ProjectManifest): string {
@@ -67,7 +46,5 @@ export function createEvaluateProjectPrompt(manifest: ProjectManifest): string {
     '```txt',
     summarizeManifestForPrompt(manifest),
     '```',
-    '',
-    'Entrega el diagnóstico en español, con prioridad clara y sin modificar archivos.',
   ].join('\n');
 }

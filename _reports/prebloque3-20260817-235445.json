@@ -1,0 +1,223 @@
+﻿{
+    "ProjectRoot":  "C:\\Users\\martin\\Desktop\\VSC\\BestS\\Coder",
+    "Mode":  "Structural",
+    "StartedAt":  "2026-08-17T23:53:28.0655279-04:00",
+    "FinishedAt":  "2026-08-17T23:54:45.2453026-04:00",
+    "Score":  100,
+    "Pass":  30,
+    "Warn":  5,
+    "Fail":  0,
+    "GateReady":  true,
+    "Findings":  [
+                     {
+                         "Area":  "JSON",
+                         "Check":  "package.json",
+                         "Status":  "PASS",
+                         "Details":  "JSON valido"
+                     },
+                     {
+                         "Area":  "JSON",
+                         "Check":  "tsconfig.json",
+                         "Status":  "PASS",
+                         "Details":  "JSON valido"
+                     },
+                     {
+                         "Area":  "Dependencies",
+                         "Check":  "next",
+                         "Status":  "PASS",
+                         "Details":  "^15.0.0"
+                     },
+                     {
+                         "Area":  "Dependencies",
+                         "Check":  "react",
+                         "Status":  "PASS",
+                         "Details":  "^19.0.0"
+                     },
+                     {
+                         "Area":  "Dependencies",
+                         "Check":  "@supabase/supabase-js",
+                         "Status":  "PASS",
+                         "Details":  "^2.112.3"
+                     },
+                     {
+                         "Area":  "Dependencies",
+                         "Check":  "@supabase/ssr",
+                         "Status":  "PASS",
+                         "Details":  "^0.12.4"
+                     },
+                     {
+                         "Area":  "Environment",
+                         "Check":  "NEXT_PUBLIC_SUPABASE_URL",
+                         "Status":  "PASS",
+                         "Details":  "Configurada"
+                     },
+                     {
+                         "Area":  "Environment",
+                         "Check":  "Supabase public key",
+                         "Status":  "PASS",
+                         "Details":  "Configurada"
+                     },
+                     {
+                         "Area":  "Security",
+                         "Check":  "NEXT_PUBLIC secret exposure",
+                         "Status":  "PASS",
+                         "Details":  "No detectado"
+                     },
+                     {
+                         "Area":  "Git",
+                         "Check":  "Tracked .env files",
+                         "Status":  "WARN",
+                         "Details":  ".env.example"
+                     },
+                     {
+                         "Area":  "Git",
+                         "Check":  "Working tree",
+                         "Status":  "WARN",
+                         "Details":  "Hay cambios sin commit"
+                     },
+                     {
+                         "Area":  "LIVE1/LIVE2",
+                         "Check":  "lib\\supabase\\server.ts",
+                         "Status":  "PASS",
+                         "Details":  "Existe"
+                     },
+                     {
+                         "Area":  "LIVE1/LIVE2",
+                         "Check":  "lib\\live1\\auth.ts",
+                         "Status":  "PASS",
+                         "Details":  "Existe"
+                     },
+                     {
+                         "Area":  "LIVE1/LIVE2",
+                         "Check":  "lib\\control-plane\\types.ts",
+                         "Status":  "PASS",
+                         "Details":  "Existe"
+                     },
+                     {
+                         "Area":  "LIVE1/LIVE2",
+                         "Check":  "lib\\control-plane\\bridge.ts",
+                         "Status":  "PASS",
+                         "Details":  "Existe"
+                     },
+                     {
+                         "Area":  "LIVE1/LIVE2",
+                         "Check":  "lib\\control-plane\\project.ts",
+                         "Status":  "PASS",
+                         "Details":  "Existe"
+                     },
+                     {
+                         "Area":  "LIVE1/LIVE2",
+                         "Check":  "lib\\control-plane\\persistence.ts",
+                         "Status":  "PASS",
+                         "Details":  "Existe"
+                     },
+                     {
+                         "Area":  "LIVE1/LIVE2",
+                         "Check":  "app\\api\\control-plane\\health\\route.ts",
+                         "Status":  "PASS",
+                         "Details":  "Existe"
+                     },
+                     {
+                         "Area":  "LIVE1/LIVE2",
+                         "Check":  "app\\api\\control-plane\\projects\\[id]\\[...action]\\route.ts",
+                         "Status":  "PASS",
+                         "Details":  "Existe"
+                     },
+                     {
+                         "Area":  "LIVE1/LIVE2",
+                         "Check":  "components\\project-control-plane.tsx",
+                         "Status":  "PASS",
+                         "Details":  "Existe"
+                     },
+                     {
+                         "Area":  "LIVE1/LIVE2",
+                         "Check":  "app\\dashboard\\projects\\[id]\\control\\page.tsx",
+                         "Status":  "PASS",
+                         "Details":  "Existe"
+                     },
+                     {
+                         "Area":  "LIVE1/LIVE2",
+                         "Check":  "supabase\\migrations\\20260817_live1_saas_core.sql",
+                         "Status":  "PASS",
+                         "Details":  "Existe"
+                     },
+                     {
+                         "Area":  "LIVE1/LIVE2",
+                         "Check":  "supabase\\migrations\\20260817_live2_control_plane.sql",
+                         "Status":  "PASS",
+                         "Details":  "Existe"
+                     },
+                     {
+                         "Area":  "Architecture",
+                         "Check":  "Project resolver",
+                         "Status":  "PASS",
+                         "Details":  "lib\\control-plane\\project.ts"
+                     },
+                     {
+                         "Area":  "Architecture",
+                         "Check":  "Workspace resolver",
+                         "Status":  "PASS",
+                         "Details":  "lib\\control-plane\\project.ts"
+                     },
+                     {
+                         "Area":  "Architecture",
+                         "Check":  "Runtime persistence",
+                         "Status":  "PASS",
+                         "Details":  "lib\\control-plane\\persistence.ts"
+                     },
+                     {
+                         "Area":  "Architecture",
+                         "Check":  "Change-set persistence",
+                         "Status":  "PASS",
+                         "Details":  "lib\\control-plane\\persistence.ts"
+                     },
+                     {
+                         "Area":  "Architecture",
+                         "Check":  "Control Plane certification",
+                         "Status":  "PASS",
+                         "Details":  "app\\api\\control-plane\\projects\\[id]\\[...action]\\route.ts"
+                     },
+                     {
+                         "Area":  "Security",
+                         "Check":  "app\\api\\project\\run-command\\route.ts",
+                         "Status":  "WARN",
+                         "Details":  "Shell endpoint local: NO exponer publicamente sin auth/allowlist/worker isolation"
+                     },
+                     {
+                         "Area":  "Security",
+                         "Check":  "app\\api\\supreme\\runtime\\command\\route.ts",
+                         "Status":  "WARN",
+                         "Details":  "Shell endpoint local: NO exponer publicamente sin auth/allowlist/worker isolation"
+                     },
+                     {
+                         "Area":  "Dependencies",
+                         "Check":  "npm audit high",
+                         "Status":  "WARN",
+                         "Details":  "4 high; revisar sin usar --force a ciegas"
+                     },
+                     {
+                         "Area":  "Build Safety",
+                         "Check":  "Coder dev process",
+                         "Status":  "PASS",
+                         "Details":  "No hay proceso compitiendo con .next"
+                     },
+                     {
+                         "Area":  "Compiler",
+                         "Check":  "npm run typecheck",
+                         "Status":  "PASS",
+                         "Details":  "tsc limpio"
+                     },
+                     {
+                         "Area":  "Build",
+                         "Check":  "npm run build",
+                         "Status":  "PASS",
+                         "Details":  "Next production build limpio"
+                     },
+                     {
+                         "Area":  "Build",
+                         "Check":  "routes-manifest.json",
+                         "Status":  "PASS",
+                         "Details":  "Generado"
+                     }
+                 ]
+}
