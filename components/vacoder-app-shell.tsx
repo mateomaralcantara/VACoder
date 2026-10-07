@@ -22,9 +22,14 @@ const navItems: NavItem[] = [
   { label: 'Settings', href: '/dashboard', icon: '⚙' },
 ];
 
-function isActivePath(pathname: string, href: string) {
-  if (href === '/') return pathname === '/';
-  return pathname === href || pathname.startsWith(`${href}/`);
+function isActiveItem(pathname: string, item: NavItem) {
+  if (item.label === 'Dashboard') return pathname === '/';
+  if (item.label === 'Studio') return pathname === '/studio' || pathname.startsWith('/studio/');
+  if (item.label === 'Runtime') return pathname === '/runtime' || pathname.startsWith('/runtime/');
+  if (item.label === 'Projects') return pathname.startsWith('/dashboard/projects');
+  if (item.label === 'Agents') return pathname.startsWith('/supreme');
+  if (item.label === 'Settings') return pathname === '/dashboard';
+  return false;
 }
 
 export function VacoderAppShell({ children }: { children: ReactNode }) {
@@ -43,7 +48,7 @@ export function VacoderAppShell({ children }: { children: ReactNode }) {
 
         <nav className="va-sidebar-nav" aria-label="Navegación principal">
           {navItems.map((item, index) => {
-            const active = isActivePath(pathname, item.href);
+            const active = isActiveItem(pathname, item);
             const divider = index === 3;
 
             return (
