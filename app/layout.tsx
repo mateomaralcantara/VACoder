@@ -3,8 +3,9 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Agente Tutor IDE',
-  description: 'Espacio de trabajo de código con panel de código, profesor, actividad, diff y terminal.',
+  title: 'VACoder Agent OS',
+  description:
+    'App Factory con Dashboard, Studio, Runtime, scanner, orquestación durable y cloud runtime.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
