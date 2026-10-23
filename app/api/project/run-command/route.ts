@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
-const APPS_ROOT = process.env.VACODER_APPS_ROOT || 'C:\\\\Users\\\\martin\\\\Desktop\\\\VSC\\\\APPS';
+const APPS_ROOT = process.env.VACODER_APPS_ROOT || path.join(process.cwd(), 'projects');
 
 const ALLOWED_COMMANDS = new Set([
   'npm install',
