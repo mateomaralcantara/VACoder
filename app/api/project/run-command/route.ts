@@ -4,6 +4,8 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
+const APPS_ROOT = process.env.VACODER_APPS_ROOT || 'C:\\\\Users\\\\martin\\\\Desktop\\\\VSC\\\\APPS';
+
 const ALLOWED_COMMANDS = new Set([
   'npm install',
   'npm run build',
@@ -61,8 +63,10 @@ export async function POST(request: Request) {
     const cwd = path.resolve(body.cwd || '');
     const command = body.command?.trim();
 
-    if (!path.isAbsolute(cwd)) {
-      throw new Error('cwd debe ser una ruta absoluta.');
+    const root = path.resolve(APPS_ROOT);
+    const relative = path.relative(root, cwd);
+    if (relative === '..' || relative.startsWith('..' + path.sep) || path.isAbsolute(relative)) {
+      throw new Error('Directorio de ejecución fuera del espacio autorizado.');
     }
 
     if (!ALLOWED_COMMANDS.has(command)) {
