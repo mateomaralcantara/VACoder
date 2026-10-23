@@ -81,7 +81,8 @@ export function assertSafeProjectPath(projectPath: string) {
   const resolvedRoot = path.resolve(APPS_ROOT);
   const resolvedProject = path.resolve(projectPath);
 
-  if (!resolvedProject.toLowerCase().startsWith(resolvedRoot.toLowerCase())) {
+  const relative = path.relative(resolvedRoot, resolvedProject);
+  if (relative === ".." || relative.startsWith(".." + path.sep) || path.isAbsolute(relative)) {
     throw new Error(
       "Ruta insegura. Solo se permite modificar proyectos dentro de C:\\Users\\martin\\Desktop\\VSC\\APPS",
     );
