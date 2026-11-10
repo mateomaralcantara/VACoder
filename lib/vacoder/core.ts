@@ -3,7 +3,11 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-export const APPS_ROOT = "C:\\Users\\martin\\Desktop\\VSC\\APPS";
+// Carpeta que contiene los proyectos que VACoder puede leer y modificar.
+// Se puede cambiar con VACODER_APPS_ROOT (ruta absoluta).
+export const APPS_ROOT =
+  process.env.VACODER_APPS_ROOT?.trim() ||
+  "C:\\Users\\martin\\Desktop\\VSC\\APPS";
 
 const SKIP_DIRS = new Set([
   "node_modules",
@@ -81,9 +85,15 @@ export function assertSafeProjectPath(projectPath: string) {
   const resolvedRoot = path.resolve(APPS_ROOT);
   const resolvedProject = path.resolve(projectPath);
 
-  if (!resolvedProject.toLowerCase().startsWith(resolvedRoot.toLowerCase())) {
+  // Comparar con separador final: sin el, "APPS-otra" pasaria como si
+  // estuviera dentro de "APPS".
+  const rootLower = resolvedRoot.toLowerCase();
+  const projectLower = resolvedProject.toLowerCase();
+  const rootWithSep = rootLower.endsWith(path.sep) ? rootLower : rootLower + path.sep;
+
+  if (projectLower !== rootLower && !projectLower.startsWith(rootWithSep)) {
     throw new Error(
-      "Ruta insegura. Solo se permite modificar proyectos dentro de C:\\Users\\martin\\Desktop\\VSC\\APPS",
+      "Ruta insegura. Solo se permite modificar proyectos dentro de " + resolvedRoot,
     );
   }
 
