@@ -1,6 +1,7 @@
 import { exec } from 'node:child_process';
 import path from 'node:path';
 import { NextResponse } from 'next/server';
+import { assertInsideAppsRoot } from '@/lib/security/project-root';
 
 export const runtime = 'nodejs';
 
@@ -58,7 +59,7 @@ function runCommand(command: string, cwd: string, timeoutMs: number) {
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as RunCommandBody;
-    const cwd = path.resolve(body.cwd || '');
+    const cwd = assertInsideAppsRoot(path.resolve(body.cwd || ''));
     const command = body.command?.trim();
 
     if (!path.isAbsolute(cwd)) {

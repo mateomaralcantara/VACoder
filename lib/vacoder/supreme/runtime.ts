@@ -1,4 +1,4 @@
-﻿import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+﻿import type { ChildProcess } from "node:child_process";
 import net from "node:net";
 import { randomUUID } from "node:crypto";
 import { assertSafeProjectPath, runCommand } from "@/lib/vacoder/core";
@@ -6,6 +6,11 @@ import {
   assertRuntimeCommand,
   assertTerminalCommand,
 } from "@/lib/security/command-policy";
+import {
+  killProcessTree,
+  spawnArgv,
+  tokenizeCommand,
+} from "@/lib/security/process";
 
 export type SupremeRuntimeStatus = "starting" | "running" | "stopped" | "failed";
 
@@ -21,7 +26,7 @@ export type SupremeRuntimeSession = {
   pid?: number;
   exitCode?: number | null;
   logs: string[];
-  process?: ChildProcessWithoutNullStreams;
+  process?: ChildProcess;
 };
 
 export type SupremeRuntimePublicSession = Omit<SupremeRuntimeSession, "process">;
@@ -155,25 +160,25 @@ export async function startSupremeRuntime(args: {
   pushLog(session, "Iniciando runtime en " + projectPath);
   pushLog(session, "Comando: " + command);
 
-  const child = spawn("cmd.exe", ["/c", command], {
-    cwd: projectPath,
+  const [file, ...commandArgs] = tokenizeCommand(command);
+
+  const child = spawnArgv(projectPath, file, commandArgs, {
     env: {
-      ...process.env,
       PORT: String(port),
       BROWSER: "none",
     },
-    windowsHide: false,
+    detached: true,
   });
 
   session.process = child;
   session.pid = child.pid;
   session.status = "running";
 
-  child.stdout.on("data", (chunk) => {
+  child.stdout?.on("data", (chunk) => {
     pushLog(session, chunk.toString());
   });
 
-  child.stderr.on("data", (chunk) => {
+  child.stderr?.on("data", (chunk) => {
     pushLog(session, chunk.toString());
   });
 
@@ -201,14 +206,7 @@ export async function stopSupremeRuntime(id: string) {
   }
 
   if (session.process && session.pid) {
-    await new Promise<void>((resolve) => {
-      const killer = spawn("taskkill", ["/pid", String(session.pid), "/T", "/F"], {
-        windowsHide: true,
-      });
-
-      killer.on("close", () => resolve());
-      killer.on("error", () => resolve());
-    });
+    await killProcessTree(session.process);
   }
 
   session.status = "stopped";

@@ -1,3 +1,5 @@
+import path from "node:path";
+import { resolveAppsRoot } from "@/lib/security/project-root";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -36,7 +38,7 @@ export async function POST(request: Request) {
     status: "preview-ready",
     projectName,
     description,
-    destination: `C:\\Users\\martin\\Desktop\\VSC\\APPS\\${projectName}`,
+    destination: path.join(resolveAppsRoot(), projectName),
     routes: [
       "/",
       "/dashboard",

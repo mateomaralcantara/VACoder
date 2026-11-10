@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { assertInsideAppsRoot } from '@/lib/security/project-root';
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process';
 import type {
   ProductionEvent,
@@ -34,7 +35,7 @@ function createEvent(
 }
 
 function assertSafeCwd(cwd: string): string {
-  const resolved = path.resolve(cwd);
+  const resolved = assertInsideAppsRoot(path.resolve(cwd));
   const parsed = path.parse(resolved);
 
   if (!path.isAbsolute(resolved)) {

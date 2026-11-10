@@ -1,13 +1,12 @@
-﻿import { spawn } from "node:child_process";
+﻿import { assertInsideAppsRoot, resolveAppsRoot } from "@/lib/security/project-root";
+import { runArgv, tokenizeCommand } from "@/lib/security/process";
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 
 // Carpeta que contiene los proyectos que VACoder puede leer y modificar.
 // Se puede cambiar con VACODER_APPS_ROOT (ruta absoluta).
-export const APPS_ROOT =
-  process.env.VACODER_APPS_ROOT?.trim() ||
-  "C:\\Users\\martin\\Desktop\\VSC\\APPS";
+export const APPS_ROOT = resolveAppsRoot();
 
 const SKIP_DIRS = new Set([
   "node_modules",
@@ -78,26 +77,7 @@ export type ValidationResult = {
 };
 
 export function assertSafeProjectPath(projectPath: string) {
-  if (!projectPath || typeof projectPath !== "string") {
-    throw new Error("projectPath es obligatorio.");
-  }
-
-  const resolvedRoot = path.resolve(APPS_ROOT);
-  const resolvedProject = path.resolve(projectPath);
-
-  // Comparar con separador final: sin el, "APPS-otra" pasaria como si
-  // estuviera dentro de "APPS".
-  const rootLower = resolvedRoot.toLowerCase();
-  const projectLower = resolvedProject.toLowerCase();
-  const rootWithSep = rootLower.endsWith(path.sep) ? rootLower : rootLower + path.sep;
-
-  if (projectLower !== rootLower && !projectLower.startsWith(rootWithSep)) {
-    throw new Error(
-      "Ruta insegura. Solo se permite modificar proyectos dentro de " + resolvedRoot,
-    );
-  }
-
-  return resolvedProject;
+  return assertInsideAppsRoot(projectPath);
 }
 
 export function assertSafeRelativePath(relativePath: string) {
@@ -382,82 +362,17 @@ export async function readProjectFile(projectPathInput: string, relativePathInpu
   return fs.readFile(target, "utf8");
 }
 
+// Ejecuta un comando simple (programa + argumentos separados por espacios)
+// sin pasar por un shell. Para argumentos con espacios usa runArgv.
 export function runCommand(
   cwd: string,
   command: string,
   timeoutMs = 1000 * 60 * 3,
 ): Promise<CommandResult> {
-  return new Promise((resolve) => {
-    const child = spawn(
-      "powershell.exe",
-      [
-        "-NoLogo",
-        "-NoProfile",
-        "-ExecutionPolicy",
-        "Bypass",
-        "-Command",
-        command,
-      ],
-      {
-        cwd,
-        windowsHide: true,
-        shell: false,
-        stdio: "pipe",
-        env: {
-          ...process.env,
-          NODE_ENV: process.env.NODE_ENV || "development",
-          SystemRoot: process.env.SystemRoot || "C:\\Windows",
-          WINDIR: process.env.WINDIR || "C:\\Windows",
-          ComSpec: process.env.ComSpec || "C:\\Windows\\System32\\cmd.exe",
-        },
-      },
-    );
+  const [file = "", ...args] = tokenizeCommand(command);
 
-    const stdout: string[] = [];
-    const stderr: string[] = [];
-    let finished = false;
-    let timedOut = false;
-
-    const timer = setTimeout(() => {
-      if (!finished) {
-        timedOut = true;
-        child.kill();
-      }
-    }, timeoutMs);
-
-    child.stdout?.on("data", (chunk: Buffer) => {
-      stdout.push(chunk.toString("utf8"));
-    });
-
-    child.stderr?.on("data", (chunk: Buffer) => {
-      stderr.push(chunk.toString("utf8"));
-    });
-
-    child.on("error", (error) => {
-      finished = true;
-      clearTimeout(timer);
-
-      resolve({
-        command,
-        exitCode: 1,
-        stdout: stdout.join(""),
-        stderr: stderr.join("") + "\n" + error.message,
-        timedOut,
-      });
-    });
-
-    child.on("close", (code) => {
-      finished = true;
-      clearTimeout(timer);
-
-      resolve({
-        command,
-        exitCode: timedOut ? 124 : code ?? 1,
-        stdout: stdout.join(""),
-        stderr: stderr.join(""),
-        timedOut,
-      });
-    });
+  return runArgv(cwd, file, args, timeoutMs, {
+    NODE_ENV: process.env.NODE_ENV || "development",
   });
 }
 
