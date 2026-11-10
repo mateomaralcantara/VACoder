@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireLiveUser } from "@/lib/live1/auth";
+import { canCreateProject } from "@/lib/billing/plans";
 
 function slugify(value: string) {
   return value
@@ -132,6 +133,28 @@ export async function createProjectAction(
     throw new Error(
       "Organizacion y nombre son obligatorios.",
     );
+  }
+
+  // Limite de proyectos del plan. La base de datos lo vuelve a comprobar
+  // (trigger enforce_project_limit); esto solo da un mensaje claro.
+  const [{ data: organization }, { count }] = await Promise.all([
+    supabase
+      .from("organizations")
+      .select("plan")
+      .eq("id", organizationId)
+      .maybeSingle(),
+    supabase
+      .from("projects")
+      .select("id", { count: "exact", head: true })
+      .eq("organization_id", organizationId),
+  ]);
+
+  if (!organization) {
+    throw new Error("Organizacion no encontrada.");
+  }
+
+  if (!canCreateProject(organization.plan, count ?? 0)) {
+    redirect("/dashboard/billing?error=limite");
   }
 
   const slug = uniqueSlug(name);
