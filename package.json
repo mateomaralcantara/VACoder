@@ -1,13 +1,14 @@
 {
-  "name": "ide-tutor-agent",
+  "name": "vacoder",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "validate": "npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
@@ -23,5 +24,8 @@
     "@types/react": "19.0.2",
     "@types/react-dom": "19.0.2",
     "typescript": "5.7.2"
+  },
+  "engines": {
+    "node": ">=22.6"
   }
 }

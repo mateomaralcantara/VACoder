@@ -1,7 +1,16 @@
-﻿import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+﻿import type { ChildProcess } from "node:child_process";
 import net from "node:net";
 import { randomUUID } from "node:crypto";
 import { assertSafeProjectPath, runCommand } from "@/lib/vacoder/core";
+import {
+  assertRuntimeCommand,
+  assertTerminalCommand,
+} from "@/lib/security/command-policy";
+import {
+  killProcessTree,
+  spawnArgv,
+  tokenizeCommand,
+} from "@/lib/security/process";
 
 export type SupremeRuntimeStatus = "starting" | "running" | "stopped" | "failed";
 
@@ -17,7 +26,7 @@ export type SupremeRuntimeSession = {
   pid?: number;
   exitCode?: number | null;
   logs: string[];
-  process?: ChildProcessWithoutNullStreams;
+  process?: ChildProcess;
 };
 
 export type SupremeRuntimePublicSession = Omit<SupremeRuntimeSession, "process">;
@@ -114,7 +123,14 @@ export async function startSupremeRuntime(args: {
 }) {
   const projectPath = assertSafeProjectPath(args.projectPath);
   const port = Number(args.port || 3001);
-  const command = String(args.command || "npm run dev -- --port " + port);
+
+  if (!Number.isInteger(port) || port < 1024 || port > 65535) {
+    throw new Error("Puerto invalido: usa un entero entre 1024 y 65535.");
+  }
+
+  const command = assertRuntimeCommand(
+    args.command || "npm run dev -- --port " + port,
+  );
 
   const id = randomUUID();
   const previewUrl = "http://localhost:" + port;
@@ -144,25 +160,25 @@ export async function startSupremeRuntime(args: {
   pushLog(session, "Iniciando runtime en " + projectPath);
   pushLog(session, "Comando: " + command);
 
-  const child = spawn("cmd.exe", ["/c", command], {
-    cwd: projectPath,
+  const [file, ...commandArgs] = tokenizeCommand(command);
+
+  const child = spawnArgv(projectPath, file, commandArgs, {
     env: {
-      ...process.env,
       PORT: String(port),
       BROWSER: "none",
     },
-    windowsHide: false,
+    detached: true,
   });
 
   session.process = child;
   session.pid = child.pid;
   session.status = "running";
 
-  child.stdout.on("data", (chunk) => {
+  child.stdout?.on("data", (chunk) => {
     pushLog(session, chunk.toString());
   });
 
-  child.stderr.on("data", (chunk) => {
+  child.stderr?.on("data", (chunk) => {
     pushLog(session, chunk.toString());
   });
 
@@ -190,14 +206,7 @@ export async function stopSupremeRuntime(id: string) {
   }
 
   if (session.process && session.pid) {
-    await new Promise<void>((resolve) => {
-      const killer = spawn("taskkill", ["/pid", String(session.pid), "/T", "/F"], {
-        windowsHide: true,
-      });
-
-      killer.on("close", () => resolve());
-      killer.on("error", () => resolve());
-    });
+    await killProcessTree(session.process);
   }
 
   session.status = "stopped";
@@ -213,26 +222,14 @@ export async function runSupremeTerminalCommand(args: {
   timeoutMs?: number;
 }) {
   const projectPath = assertSafeProjectPath(args.projectPath);
-  const command = String(args.command || "").trim();
+  // Lista blanca: ver lib/security/command-policy.ts
+  const command = assertTerminalCommand(args.command);
+  const timeoutMs = Math.min(
+    Math.max(Number(args.timeoutMs) || 120000, 5000),
+    300000,
+  );
 
-  if (!command) {
-    throw new Error("El comando es obligatorio.");
-  }
-
-  const blocked = [
-    "format c:",
-    "del /s c:",
-    "rd /s c:",
-    "remove-item c:",
-  ];
-
-  const lower = command.toLowerCase();
-
-  if (blocked.some((item) => lower.includes(item))) {
-    throw new Error("Comando bloqueado por seguridad.");
-  }
-
-  return runCommand(projectPath, command, args.timeoutMs || 120000);
+  return runCommand(projectPath, command, timeoutMs);
 }
 
 export async function checkSupremePreview(url: string) {

@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { assertInsideAppsRoot } from '@/lib/security/project-root';
 import type {
   ProductionPipelineEvent,
   ProductionPipelinePhase,
@@ -34,7 +35,7 @@ function createEvent(
 }
 
 function assertSafeProjectPath(cwd: string): string {
-  const resolved = path.resolve(cwd);
+  const resolved = assertInsideAppsRoot(path.resolve(cwd));
   const root = path.parse(resolved).root;
 
   if (!path.isAbsolute(resolved)) {

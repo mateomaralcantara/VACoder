@@ -1,11 +1,12 @@
 import fs from "node:fs/promises";
+import { assertInsideAppsRoot, resolveAppsRoot } from "@/lib/security/project-root";
 import path from "node:path";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const APPS_ROOT = "C:\\Users\\martin\\Desktop\\VSC\\APPS";
+const APPS_ROOT = resolveAppsRoot();
 
 function slugify(value: string) {
   return value
@@ -27,14 +28,7 @@ async function exists(target: string) {
 }
 
 function assertSafeAppPath(projectPath: string) {
-  const resolvedRoot = path.resolve(APPS_ROOT);
-  const resolvedProject = path.resolve(projectPath);
-
-  if (!resolvedProject.toLowerCase().startsWith(resolvedRoot.toLowerCase())) {
-    throw new Error("Ruta insegura. Solo se permite crear apps dentro de C:\\Users\\martin\\Desktop\\VSC\\APPS");
-  }
-
-  return resolvedProject;
+  return assertInsideAppsRoot(projectPath);
 }
 
 async function writeFileSafe(filePath: string, content: string) {

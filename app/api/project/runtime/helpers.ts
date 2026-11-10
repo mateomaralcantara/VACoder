@@ -1,9 +1,10 @@
 import path from 'node:path';
+import { assertInsideAppsRoot } from '@/lib/security/project-root';
 import type { LiveProjectRoute, RuntimeStatusResponse } from '@/lib/live-project/types';
 import { getRuntimeState } from '@/app/api/project/runtime/state';
 
 export function assertSafeCwd(cwd: string): string {
-  const resolved = path.resolve(cwd);
+  const resolved = assertInsideAppsRoot(path.resolve(cwd));
 
   if (!path.isAbsolute(resolved)) {
     throw new Error('La ruta del proyecto debe ser absoluta.');
