@@ -30,8 +30,6 @@ project-manifest.json
 
 # Templates permitidas
 !.env.example
-!.env.block3.example
-!.env.block4.example
 
 # Node / Next
 node_modules/
@@ -71,3 +69,8 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 
+
+# Salidas generadas
+*.tsbuildinfo
+_reports/
+_scanner-coder-10/
