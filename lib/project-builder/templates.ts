@@ -88,6 +88,24 @@ import type {
   
     const files: GeneratedProjectFile[] = [
       createFile(
+        '.gitignore',
+        'text',
+        `node_modules/
+.next/
+out/
+dist/
+build/
+coverage/
+.vercel/
+.env
+.env.local
+.env.*.local
+*.tsbuildinfo
+*.log
+.DS_Store
+`,
+      ),
+      createFile(
         'package.json',
         'json',
         asJson({

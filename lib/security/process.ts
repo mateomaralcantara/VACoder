@@ -5,6 +5,7 @@
 // rechazan los argumentos con metacaracteres en lugar de intentar escaparlos.
 
 import { spawn, type ChildProcess, type SpawnOptions } from "node:child_process";
+import { existsSync } from "node:fs";
 
 export type ProcessResult = {
   command: string;
@@ -49,11 +50,29 @@ export function resolveSpawnTarget(
 
 export type EnvOverrides = Record<string, string | undefined>;
 
-function baseEnv(extra?: EnvOverrides): NodeJS.ProcessEnv {
+// NODE_ENV del proceso hijo. El servidor de VACoder corre con su propio
+// NODE_ENV (development bajo `next dev`) y heredarlo rompe a los proyectos:
+// `next build` con NODE_ENV=development falla al prerenderizar, y
+// `npm install` con NODE_ENV=production omite las devDependencies.
+// Un build siempre es de produccion; el resto decide por si mismo.
+export function nodeEnvForCommand(file: string, args: string[]) {
+  const [first = "", second = ""] = args.map((arg) => arg.toLowerCase());
+  const program = file.toLowerCase();
+
+  const isBuild =
+    (["npm", "pnpm", "yarn"].includes(program) && first === "run" && second === "build") ||
+    (["pnpm", "yarn"].includes(program) && first === "build") ||
+    (program === "npx" && first === "next" && second === "build");
+
+  return isBuild ? "production" : undefined;
+}
+
+function baseEnv(file: string, args: string[], extra?: EnvOverrides): NodeJS.ProcessEnv {
   return {
     ...process.env,
+    NODE_ENV: nodeEnvForCommand(file, args),
     ...extra,
-  };
+  } as NodeJS.ProcessEnv;
 }
 
 export function spawnArgv(
@@ -62,11 +81,17 @@ export function spawnArgv(
   args: string[],
   options: { env?: EnvOverrides; detached?: boolean } = {},
 ): ChildProcess {
+  // Sin esta comprobacion Node informa "spawn npm ENOENT", que parece decir
+  // que falta npm cuando lo que falta es la carpeta del proyecto.
+  if (!existsSync(cwd)) {
+    throw new Error("La carpeta del proyecto no existe: " + cwd);
+  }
+
   const target = resolveSpawnTarget(file, args);
 
   const spawnOptions: SpawnOptions = {
     cwd,
-    env: baseEnv(options.env),
+    env: baseEnv(file, args, options.env),
     shell: false,
     windowsHide: true,
     stdio: ["ignore", "pipe", "pipe"],

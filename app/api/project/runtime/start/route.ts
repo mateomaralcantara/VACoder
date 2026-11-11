@@ -1,5 +1,4 @@
-import { existsSync } from 'node:fs';
-import { spawn } from 'node:child_process';
+import { spawnArgv } from '@/lib/security/process';
 import { NextResponse } from 'next/server';
 import type { RuntimeStartRequest } from '@/lib/live-project/types';
 import {
@@ -15,65 +14,6 @@ import {
 } from '@/app/api/project/runtime/state';
 
 export const runtime = 'nodejs';
-
-function isWindows(): boolean {
-  return process.platform === 'win32';
-}
-
-function createSafeEnv(port: number): NodeJS.ProcessEnv {
-  return {
-    ...process.env,
-    NODE_ENV: 'development',
-    PORT: String(port),
-    SystemRoot: process.env.SystemRoot || 'C:\\Windows',
-    WINDIR: process.env.WINDIR || 'C:\\Windows',
-    ComSpec: process.env.ComSpec || 'C:\\Windows\\System32\\cmd.exe',
-  } as NodeJS.ProcessEnv;
-}
-
-function getWindowsPowerShell(): string {
-  const systemRoot = process.env.SystemRoot || 'C:\\Windows';
-
-  const candidates = [
-    `${systemRoot}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe`,
-    `${systemRoot}\\Sysnative\\WindowsPowerShell\\v1.0\\powershell.exe`,
-    'powershell.exe',
-  ];
-
-  for (const candidate of candidates) {
-    if (candidate === 'powershell.exe' || existsSync(candidate)) {
-      return candidate;
-    }
-  }
-
-  return 'powershell.exe';
-}
-
-function createRuntimeCommand(port: number): {
-  file: string;
-  args: string[];
-} {
-  const commandText = `npm run dev -- --port ${port}`;
-
-  if (isWindows()) {
-    return {
-      file: getWindowsPowerShell(),
-      args: [
-        '-NoLogo',
-        '-NoProfile',
-        '-ExecutionPolicy',
-        'Bypass',
-        '-Command',
-        commandText,
-      ],
-    };
-  }
-
-  return {
-    file: 'sh',
-    args: ['-lc', commandText],
-  };
-}
 
 function markRunningIfReady(output: string, port: number): void {
   const cleanOutput = output.toLowerCase();
@@ -112,18 +52,13 @@ export async function POST(request: Request) {
     pushRuntimeLog(`Iniciando proyecto en ${cwd}`);
     pushRuntimeLog(`URL esperada: http://localhost:${port}`);
 
-    const runtimeCommand = createRuntimeCommand(port);
+    pushRuntimeLog(`Comando: npm run dev -- --port ${port}`);
 
-    pushRuntimeLog(`Ejecutor: ${runtimeCommand.file}`);
-    pushRuntimeLog(`Comando: ${runtimeCommand.args.join(' ')}`);
-
-    const child = spawn(runtimeCommand.file, runtimeCommand.args, {
-        cwd,
-        shell: false,
-        windowsHide: true,
-        stdio: 'pipe',
-        env: createSafeEnv(port),
-      });
+    // Sin shell y como lider de grupo, para poder detener el arbol completo.
+    const child = spawnArgv(cwd, 'npm', ['run', 'dev', '--', '--port', String(port)], {
+      env: { NODE_ENV: 'development', PORT: String(port), BROWSER: 'none' },
+      detached: true,
+    });
 
     state.process = child;
 

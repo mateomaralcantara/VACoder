@@ -113,3 +113,18 @@ test("assertInsideAppsRoot", () => {
     else process.env.VACODER_APPS_ROOT = previous;
   }
 });
+
+test("nodeEnvForCommand: los builds son de produccion y el resto no hereda", async () => {
+  const { nodeEnvForCommand } = await import("../lib/security/process.ts");
+  assert.equal(nodeEnvForCommand("npm", ["run", "build"]), "production");
+  assert.equal(nodeEnvForCommand("npx", ["next", "build"]), "production");
+  assert.equal(nodeEnvForCommand("npm", ["install"]), undefined);
+  assert.equal(nodeEnvForCommand("npm", ["run", "dev", "--", "--port", "3001"]), undefined);
+  assert.equal(nodeEnvForCommand("git", ["status"]), undefined);
+});
+
+test("runArgv: carpeta inexistente", async () => {
+  const result = await runArgv(path.join(os.tmpdir(), "vacoder-no-existe-" + process.pid), process.execPath, ["-v"]);
+  assert.equal(result.exitCode, 1);
+  assert.match(result.stderr, /no existe/);
+});

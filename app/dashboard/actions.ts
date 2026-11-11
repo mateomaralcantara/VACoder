@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireLiveUser } from "@/lib/live1/auth";
 import { canCreateProject } from "@/lib/billing/plans";
+import { stripeEnv } from "@/lib/billing/stripe";
 
 function slugify(value: string) {
   return value
@@ -153,7 +154,9 @@ export async function createProjectAction(
     throw new Error("Organizacion no encontrada.");
   }
 
-  if (!canCreateProject(organization.plan, count ?? 0)) {
+  // Sin Stripe configurado no hay forma de cambiar de plan, asi que los
+  // limites no se aplican (entorno de pruebas).
+  if (stripeEnv().configured && !canCreateProject(organization.plan, count ?? 0)) {
     redirect("/dashboard/billing?error=limite");
   }
 

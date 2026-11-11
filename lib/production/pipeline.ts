@@ -1,7 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { assertInsideAppsRoot } from '@/lib/security/project-root';
-import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process';
+import type { ChildProcess } from 'node:child_process';
+import { killProcessTree, spawnArgv } from '@/lib/security/process';
 import type {
   ProductionEvent,
   ProductionPhase,
@@ -15,7 +16,7 @@ interface RunProductionPipelineOptions {
   port: number;
   maxAttempts?: number;
   onEvent?: (event: ProductionEvent) => void;
-  onRuntime?: (runtime: ChildProcessWithoutNullStreams | null) => void;
+  onRuntime?: (runtime: ChildProcess | null) => void;
 }
 
 function createEvent(
@@ -84,17 +85,6 @@ async function readPackageJson(cwd: string): Promise<{
   };
 }
 
-function createRuntimeEnv(port: number): NodeJS.ProcessEnv {
-  return {
-    ...process.env,
-    NODE_ENV: 'development',
-    PORT: String(port),
-    SystemRoot: process.env.SystemRoot || 'C:\\Windows',
-    WINDIR: process.env.WINDIR || 'C:\\Windows',
-    ComSpec: process.env.ComSpec || 'C:\\Windows\\System32\\cmd.exe',
-  } as NodeJS.ProcessEnv;
-}
-
 async function waitForHttp(url: string, timeoutMs = 1000 * 45): Promise<boolean> {
   const startedAt = Date.now();
 
@@ -132,7 +122,7 @@ async function startRuntime({
   ) => void;
 }): Promise<{
   success: boolean;
-  runtime?: ChildProcessWithoutNullStreams;
+  runtime?: ChildProcess;
   url?: string;
   error?: string;
 }> {
@@ -140,19 +130,14 @@ async function startRuntime({
 
   emit('starting', 'info', `Iniciando servidor local en ${url}`);
 
-  const runtime = spawn(
-    process.platform === 'win32' ? 'npm.cmd' : 'npm',
-    ['run', 'dev', '--', '--port', String(port)],
-    {
-      cwd,
-      shell: false,
-      windowsHide: true,
-      stdio: 'pipe',
-      env: createRuntimeEnv(port),
-    },
-  );
+  // detached: el runtime lidera su grupo de procesos, para poder detener el
+  // arbol completo (npm -> node -> next) y no dejar el puerto ocupado.
+  const runtime = spawnArgv(cwd, 'npm', ['run', 'dev', '--', '--port', String(port)], {
+    env: { NODE_ENV: 'development', PORT: String(port) },
+    detached: true,
+  });
 
-  runtime.stdout.on('data', (chunk: Buffer) => {
+  runtime.stdout?.on('data', (chunk: Buffer) => {
     chunk
       .toString('utf8')
       .split(/\r?\n/g)
@@ -161,7 +146,7 @@ async function startRuntime({
       .forEach((line) => emit('starting', 'info', line));
   });
 
-  runtime.stderr.on('data', (chunk: Buffer) => {
+  runtime.stderr?.on('data', (chunk: Buffer) => {
     chunk
       .toString('utf8')
       .split(/\r?\n/g)
@@ -173,7 +158,7 @@ async function startRuntime({
   const ok = await waitForHttp(url);
 
   if (!ok) {
-    runtime.kill();
+    await killProcessTree(runtime);
 
     return {
       success: false,

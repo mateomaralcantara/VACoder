@@ -371,9 +371,7 @@ export function runCommand(
 ): Promise<CommandResult> {
   const [file = "", ...args] = tokenizeCommand(command);
 
-  return runArgv(cwd, file, args, timeoutMs, {
-    NODE_ENV: process.env.NODE_ENV || "development",
-  });
+  return runArgv(cwd, file, args, timeoutMs);
 }
 
 async function readPackageJson(projectPath: string) {

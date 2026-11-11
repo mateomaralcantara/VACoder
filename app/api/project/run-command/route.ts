@@ -1,7 +1,7 @@
-import { exec } from 'node:child_process';
 import path from 'node:path';
 import { NextResponse } from 'next/server';
 import { assertInsideAppsRoot } from '@/lib/security/project-root';
+import { runArgv, tokenizeCommand } from '@/lib/security/process';
 
 export const runtime = 'nodejs';
 
@@ -21,39 +21,9 @@ type RunCommandBody = {
 };
 
 function runCommand(command: string, cwd: string, timeoutMs: number) {
-  return new Promise<{
-    stdout: string;
-    stderr: string;
-    exitCode: number | null;
-    timedOut: boolean;
-  }>((resolve) => {
-    const child = exec(
-      command,
-      {
-        cwd,
-        timeout: timeoutMs,
-        windowsHide: true,
-        maxBuffer: 1024 * 1024 * 5,
-      },
-      (error, stdout, stderr) => {
-        const exitCode =
-          error && typeof (error as NodeJS.ErrnoException & { code?: unknown }).code === 'number'
-            ? ((error as NodeJS.ErrnoException & { code?: number }).code ?? 1)
-            : error
-              ? 1
-              : 0;
+  const [file, ...args] = tokenizeCommand(command);
 
-        resolve({
-          stdout,
-          stderr,
-          exitCode,
-          timedOut: Boolean((error as NodeJS.ErrnoException & { killed?: boolean } | null)?.killed),
-        });
-      },
-    );
-
-    child.stdin?.end();
-  });
+  return runArgv(cwd, file, args, timeoutMs);
 }
 
 export async function POST(request: Request) {
@@ -74,9 +44,9 @@ export async function POST(request: Request) {
     const result = await runCommand(command, cwd, timeoutMs);
 
     return NextResponse.json({
+      ...result,
       command,
       cwd,
-      ...result,
     });
   } catch (error) {
     return NextResponse.json(

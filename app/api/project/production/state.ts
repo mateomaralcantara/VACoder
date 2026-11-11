@@ -1,4 +1,5 @@
-import type { ChildProcessWithoutNullStreams } from 'node:child_process';
+import type { ChildProcess } from 'node:child_process';
+import { killProcessTree } from '@/lib/security/process';
 import type {
   ProductionEvent,
   ProductionPhase,
@@ -10,7 +11,7 @@ interface ProductionState {
   cwd?: string;
   port?: number;
   url?: string;
-  process: ChildProcessWithoutNullStreams | null;
+  process: ChildProcess | null;
   events: ProductionEvent[];
   updatedAt: string;
   error?: string;
@@ -38,7 +39,12 @@ export function getProductionState(): ProductionState {
 export function appendProductionEvent(event: ProductionEvent): void {
   const state = getProductionState();
 
-  state.phase = event.phase;
+  // El runtime sigue escribiendo logs (etiquetados como 'starting') despues
+  // de quedar listo o de detenerse; esas lineas se guardan, pero no deben
+  // devolver el pipeline a una fase anterior.
+  if (state.phase !== 'ready' && state.phase !== 'stopped') {
+    state.phase = event.phase;
+  }
   state.events = [...state.events, event].slice(-500);
   state.updatedAt = new Date().toISOString();
 
@@ -59,7 +65,7 @@ export function stopProductionProcess(): void {
   const state = getProductionState();
 
   if (state.process && !state.process.killed) {
-    state.process.kill();
+    void killProcessTree(state.process);
   }
 
   state.process = null;

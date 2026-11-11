@@ -30,6 +30,7 @@ export function ProjectBuilderPanel() {
   const [selectedFile, setSelectedFile] = useState<string>('');
   const [log, setLog] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [createdPath, setCreatedPath] = useState('');
 
   const selected = useMemo(() => {
     return plan?.files.find((file) => file.path === selectedFile) ?? plan?.files[0] ?? null;
@@ -63,6 +64,7 @@ export function ProjectBuilderPanel() {
 
     try {
       const result = await createProjectOnDisk({ ...form, overwrite: false });
+      setCreatedPath(result.projectPath);
       setLog((items) => [
         ...items,
         `Proyecto creado en: ${result.projectPath}`,
@@ -78,28 +80,36 @@ export function ProjectBuilderPanel() {
   }
 
   async function handleBuild() {
-    if (!form.rootPath || !form.projectName) {
-      setLog((items) => [...items, 'Falta rootPath o projectName.']);
+    if (!createdPath) {
+      setLog((items) => [...items, 'Primero crea el proyecto en disco.']);
       return;
     }
-
-    const cwd = `${form.rootPath}\\${form.projectName}`;
 
     setLoading(true);
 
     try {
-      const result = await runProjectCommand({
-        cwd,
-        command: 'npm run build',
-      });
+      // Un proyecto recien creado no tiene node_modules: sin instalar, el
+      // build no puede encontrar sus herramientas.
+      for (const command of ['npm install', 'npm run build']) {
+        setLog((items) => [...items, `$ ${command}`]);
 
-      setLog((items) => [
-        ...items,
-        `$ ${result.command}`,
-        result.stdout || '(sin stdout)',
-        result.stderr || '(sin stderr)',
-        `exitCode: ${result.exitCode}`,
-      ]);
+        const result = await runProjectCommand({
+          cwd: createdPath,
+          command,
+          timeoutMs: 300_000,
+        });
+
+        setLog((items) => [
+          ...items,
+          result.stdout || '(sin stdout)',
+          result.stderr || '(sin stderr)',
+          `exitCode: ${result.exitCode}`,
+        ]);
+
+        if (result.exitCode !== 0) {
+          break;
+        }
+      }
     } catch (error) {
       setLog((items) => [...items, error instanceof Error ? error.message : 'Error ejecutando build.']);
     } finally {
@@ -214,7 +224,7 @@ export function ProjectBuilderPanel() {
             <button type="button" onClick={handleCreate} disabled={loading || !plan}>
               Crear en disco
             </button>
-            <button type="button" onClick={handleBuild} disabled={loading}>
+            <button type="button" onClick={handleBuild} disabled={loading || !createdPath}>
               Ejecutar build
             </button>
           </div>

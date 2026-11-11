@@ -228,7 +228,9 @@ function fallbackPlan(prompt: string): MarketAgentPlan {
     filesToRead: [],
     operations: [
       {
-        path: ".vacoder/market-leader-plan.md",
+        // Fuera de .vacoder: esa carpeta es interna (snapshots y backups) y
+        // los change-sets no pueden escribir en ella.
+        path: "docs/vacoder-market-leader-plan.md",
         action: "upsert",
         reason: "Registrar el plan solicitado para ejecucion posterior.",
         content:

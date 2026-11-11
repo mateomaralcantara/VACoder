@@ -1,6 +1,7 @@
 ﻿import { EXAMPLE_PROJECT_PATH } from "@/lib/security/project-root";
 import { NextResponse } from "next/server";
-import { listProjectFiles, snapshotProject } from "@/lib/vacoder/core";
+import { assertSafeProjectPath, listProjectFiles, snapshotProject } from "@/lib/vacoder/core";
+import { scanProject } from "@/lib/project-scanner";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -8,6 +9,17 @@ export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => ({}));
+
+    // El Studio pide un manifiesto (stack detectado, archivos clave y vistas
+    // previas) enviando projectRoot; el control plane pide el listado plano
+    // enviando projectPath.
+    if (typeof body.projectRoot === "string") {
+      const { projectRoot, ...options } = body;
+      const manifest = await scanProject(assertSafeProjectPath(projectRoot), options);
+
+      return NextResponse.json({ ok: true, manifest });
+    }
+
     const projectPath = String(body.projectPath || "");
     const includeSnapshot = Boolean(body.includeSnapshot);
 

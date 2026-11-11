@@ -107,7 +107,10 @@ export async function findFreePorts(start = 3000, end = 3025) {
 }
 
 export function listSupremeRuntimes() {
-  return Array.from(getRuntimeStore().values()).map(toPublicSession);
+  // Las mas recientes primero: es la que la interfaz muestra por defecto.
+  return Array.from(getRuntimeStore().values())
+    .sort((a, b) => b.startedAt.localeCompare(a.startedAt))
+    .map(toPublicSession);
 }
 
 export function getSupremeRuntime(id: string) {

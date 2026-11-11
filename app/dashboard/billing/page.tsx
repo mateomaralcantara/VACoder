@@ -118,9 +118,9 @@ export default async function BillingPage({
 
       {!billingReady ? (
         <p style={{ ...card, background: "#FFFBEB", marginTop: 16 }}>
-          La facturacion no esta configurada en este entorno. Define
-          STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET y los STRIPE_PRICE_* para
-          vender planes.
+          Pagos desactivados en este entorno: no se cobra nada y los limites
+          de proyectos no se aplican. Se activan al definir las variables
+          STRIPE_* (ver README).
         </p>
       ) : null}
 
@@ -143,8 +143,10 @@ export default async function BillingPage({
               </p>
 
               <p>
-                Proyectos: {used} de{" "}
-                {plan.maxProjects === null ? "ilimitados" : plan.maxProjects}
+                Proyectos: {used}
+                {billingReady
+                  ? " de " + (plan.maxProjects === null ? "ilimitados" : plan.maxProjects)
+                  : ""}
               </p>
 
               {subscription?.current_period_end ? (
@@ -154,7 +156,7 @@ export default async function BillingPage({
                 </p>
               ) : null}
 
-              {!canManage ? (
+              {!billingReady ? null : !canManage ? (
                 <p>Pide a un owner o admin que gestione el plan.</p>
               ) : (
                 <div

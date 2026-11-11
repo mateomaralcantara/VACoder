@@ -104,8 +104,12 @@ export default function SupremeRuntimeCenter() {
       const data = await getJson<{ sessions: RuntimeSession[] }>("/api/supreme/runtime/status");
       setSessions(data.sessions || []);
 
-      if (!activeId && data.sessions?.[0]) {
-        setActiveId(data.sessions[0].id);
+      // Forma funcional: este refresco tambien corre desde un intervalo que
+      // conserva el activeId inicial, y asi no pisa la sesion recien iniciada.
+      const first = data.sessions?.[0];
+
+      if (first) {
+        setActiveId((current) => current || first.id);
       }
     } catch {
       // evitar ruido en refresco automatico

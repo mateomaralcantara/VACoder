@@ -1,54 +1,11 @@
 import { NextResponse } from "next/server";
+import { serializeProductionState } from "@/app/api/project/production/state";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-type ProductionStatus = {
-  ok: boolean;
-  status: "idle" | "running" | "error";
-  phase: string;
-  running: boolean;
-  message: string;
-  updatedAt: string;
-};
-
-const globalForProduction = globalThis as typeof globalThis & {
-  __vacoderProductionStatus?: ProductionStatus;
-};
-
-function getDefaultStatus(): ProductionStatus {
-  return {
-    ok: true,
-    status: "idle",
-    phase: "idle",
-    running: false,
-    message: "Production Gate listo. No hay proceso activo en este momento.",
-    updatedAt: new Date().toISOString(),
-  };
-}
-
+// Estado en vivo del pipeline que arranca /api/project/production/run: fase,
+// eventos y proceso del runtime. El panel lo consulta mientras corre.
 export async function GET() {
-  const status = globalForProduction.__vacoderProductionStatus ?? getDefaultStatus();
-
-  return NextResponse.json(status);
-}
-
-export async function POST(request: Request) {
-  const body = await request.json().catch(() => ({}));
-
-  const nextStatus: ProductionStatus = {
-    ok: true,
-    status: body.status === "running" || body.status === "error" ? body.status : "idle",
-    phase: typeof body.phase === "string" ? body.phase : "manual-update",
-    running: Boolean(body.running),
-    message:
-      typeof body.message === "string"
-        ? body.message
-        : "Estado de producción actualizado.",
-    updatedAt: new Date().toISOString(),
-  };
-
-  globalForProduction.__vacoderProductionStatus = nextStatus;
-
-  return NextResponse.json(nextStatus);
+  return NextResponse.json(serializeProductionState());
 }

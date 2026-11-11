@@ -34,7 +34,7 @@ simuladas. Para login, organizaciones y proyectos hace falta Supabase.
 | `npm run typecheck` | TypeScript sin emitir |
 | `npm test` | Pruebas unitarias (`tests/`) |
 | `npm run build` | Build de produccion |
-| `npm run test:e2e` | Prueba de humo contra el build de produccion |
+| `npm run test:e2e` | Prueba de humo contra el build y flujos del Studio contra `next dev` (builder, escaner, comandos, runtime, pipeline) |
 | `npm run validate` | Todo lo anterior en orden; es lo que corre CI |
 | `npm run worker:orchestrator` | Worker de la cola de jobs (necesita la app levantada) |
 | `npm run worker:cloud` | Worker del cloud runtime (sandbox E2B) |
@@ -54,7 +54,14 @@ Todas las variables estan documentadas en `.env.example`.
 Pon `DEMO_MODE=false` y al menos una de `OPENAI_API_KEY`,
 `ANTHROPIC_API_KEY` o `GEMINI_API_KEY`.
 
-### Facturacion (Stripe)
+### Facturacion (Stripe) — opcional
+
+Sin las variables `STRIPE_*` los pagos quedan desactivados: no se muestra
+ninguna opcion de compra y los limites de proyectos no se aplican. Para probar
+el software no hace falta configurar nada de esto ni ejecutar la migracion
+`20261110_billing_hardening.sql`.
+
+Para activarlos:
 
 1. Crea en Stripe un producto con precio mensual por cada plan de pago y copia
    sus ids a `STRIPE_PRICE_PRO`, `STRIPE_PRICE_BUSINESS` y `STRIPE_PRICE_AGENCY`.

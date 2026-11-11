@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "validate": "npm run typecheck && npm test && npm run build && npm run test:e2e",
-    "test:e2e": "node --test tests/e2e/*.test.mjs",
+    "test:e2e": "node --test tests/e2e/smoke.test.mjs && node --test tests/e2e/local-tools.test.mjs",
     "worker:orchestrator": "node scripts/workers/run-orchestrator-worker.mjs",
     "worker:cloud": "node --env-file-if-exists=.env.local services/cloud-worker/worker.mjs"
   },
