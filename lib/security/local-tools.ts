@@ -74,3 +74,57 @@ export function evaluateLocalToolsAccess(
 
   return { allowed: true };
 }
+
+// ------------------------------------------------------
+// Agente de IA (/api/agent/*)
+// ------------------------------------------------------
+// En modo demo no se llama a ningun proveedor, asi que puede ser publico. Con
+// proveedores reales cada peticion gasta creditos de la cuenta: exige sesion.
+
+export type AgentAccessInput = {
+  /** DEMO_MODE distinto de "false": respuestas simuladas. */
+  demoMode: boolean;
+  isProduction: boolean;
+  authConfigured: boolean;
+  hasUser: boolean;
+};
+
+export function isAgentPath(pathname: string) {
+  const lower = pathname.toLowerCase();
+
+  return lower === "/api/agent" || lower.startsWith("/api/agent/");
+}
+
+export function evaluateAgentAccess(
+  input: AgentAccessInput,
+): LocalToolsAccessDecision {
+  if (input.demoMode) {
+    return { allowed: true };
+  }
+
+  if (!input.authConfigured) {
+    if (input.isProduction) {
+      return {
+        allowed: false,
+        status: 403,
+        code: "AUTH_NOT_CONFIGURED",
+        error:
+          "Supabase no esta configurado; el agente con proveedores reales " +
+          "no puede exponerse en produccion sin autenticacion.",
+      };
+    }
+
+    return { allowed: true };
+  }
+
+  if (!input.hasUser) {
+    return {
+      allowed: false,
+      status: 401,
+      code: "UNAUTHENTICATED",
+      error: "Inicia sesion para usar el agente.",
+    };
+  }
+
+  return { allowed: true };
+}

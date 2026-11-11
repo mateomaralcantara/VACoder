@@ -5,7 +5,9 @@ import {
   validateTerminalCommand,
 } from "../lib/security/command-policy.ts";
 import {
+  evaluateAgentAccess,
   evaluateLocalToolsAccess,
+  isAgentPath,
   isLocalToolsPath,
 } from "../lib/security/local-tools.ts";
 
@@ -151,4 +153,33 @@ test("acceso: produccion habilitada sin Supabase sigue bloqueada", () => {
     hasUser: false,
   });
   assert.equal(decision.allowed, false);
+});
+
+test("agente: rutas", () => {
+  assert.equal(isAgentPath("/api/agent/stream"), true);
+  assert.equal(isAgentPath("/api/agents"), false);
+});
+
+test("agente: el modo demo es publico", () => {
+  const decision = evaluateAgentAccess({
+    demoMode: true,
+    isProduction: true,
+    authConfigured: false,
+    hasUser: false,
+  });
+  assert.equal(decision.allowed, true);
+});
+
+test("agente: con proveedores reales exige sesion", () => {
+  const real = { demoMode: false, isProduction: true, authConfigured: true, hasUser: false };
+  const anonymous = evaluateAgentAccess(real);
+  assert.equal(anonymous.allowed, false);
+  assert.equal(!anonymous.allowed && anonymous.status, 401);
+  assert.equal(evaluateAgentAccess({ ...real, hasUser: true }).allowed, true);
+});
+
+test("agente: proveedores reales sin Supabase solo en desarrollo", () => {
+  const noAuth = { demoMode: false, authConfigured: false, hasUser: false };
+  assert.equal(evaluateAgentAccess({ ...noAuth, isProduction: false }).allowed, true);
+  assert.equal(evaluateAgentAccess({ ...noAuth, isProduction: true }).allowed, false);
 });

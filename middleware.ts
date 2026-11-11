@@ -1,7 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { updateSupabaseSession } from "@/lib/supabase/middleware";
 import {
+  evaluateAgentAccess,
   evaluateLocalToolsAccess,
+  isAgentPath,
   isLocalToolsPath,
 } from "@/lib/security/local-tools";
 
@@ -68,6 +70,25 @@ export async function middleware(request: NextRequest) {
     return result.response;
   }
 
+  if (isAgentPath(pathname)) {
+    const decision = evaluateAgentAccess({
+      demoMode: process.env.DEMO_MODE !== "false",
+      isProduction: process.env.NODE_ENV === "production",
+      authConfigured: result.configured,
+      hasUser: Boolean(result.user),
+    });
+
+    if (!decision.allowed) {
+      return jsonPreservingCookies(result.response, decision.status, {
+        ok: false,
+        code: decision.code,
+        error: decision.error,
+      });
+    }
+
+    return result.response;
+  }
+
   const protectedRoute =
     pathname === "/dashboard" ||
     pathname.startsWith("/dashboard/");
@@ -110,5 +131,6 @@ export const config = {
     "/signup",
     "/api/project/:path*",
     "/api/supreme/:path*",
+    "/api/agent/:path*",
   ],
 };
