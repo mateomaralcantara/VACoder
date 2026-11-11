@@ -1,4 +1,5 @@
-﻿import { NextResponse } from "next/server";
+﻿import { EXAMPLE_PROJECT_PATH } from "@/lib/security/project-root";
+import { NextResponse } from "next/server";
 import {
   createBackup,
   deleteProjectFile,
@@ -574,7 +575,7 @@ export async function POST(request: Request) {
           error:
             "No hay operaciones de archivo. EnvÃ­a files[] o un prompt reconocido por la receta actual.",
           example: {
-            projectPath: "C:\\Users\\martin\\Desktop\\VSC\\APPS\\avatares",
+            projectPath: EXAMPLE_PROJECT_PATH,
             validate: true,
             autoRollback: true,
             files: [
@@ -661,7 +662,7 @@ export async function GET() {
     usage: {
       method: "POST",
       body: {
-        projectPath: "C:\\Users\\martin\\Desktop\\VSC\\APPS\\avatares",
+        projectPath: EXAMPLE_PROJECT_PATH,
         prompt: "Agrega botÃ³n Iniciar lectura a cada libro cargado.",
         validate: true,
         autoRollback: true,

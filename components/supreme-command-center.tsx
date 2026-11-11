@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import { defaultProjectPath } from "@/lib/default-paths";
 import type { CSSProperties } from "react";
 import { useState } from "react";
 
@@ -75,7 +76,7 @@ function statusColor(status: string) {
 }
 
 export default function SupremeCommandCenter() {
-  const [projectPath, setProjectPath] = useState("C:\\Users\\martin\\Desktop\\VSC\\APPS\\avatares");
+  const [projectPath, setProjectPath] = useState(defaultProjectPath("mi-proyecto"));
   const [previewUrl, setPreviewUrl] = useState("http://localhost:3000");
   const [score, setScore] = useState<ProductScore | null>(null);
   const [team, setTeam] = useState<TeamFinding[]>([]);

@@ -64,3 +64,6 @@ export function assertInsideAppsRoot(projectPath: unknown) {
 
   return resolved;
 }
+
+// Ruta de ejemplo para los mensajes de ayuda de las rutas API.
+export const EXAMPLE_PROJECT_PATH = path.join(resolveAppsRoot(), "mi-proyecto");

@@ -8,7 +8,10 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
-    "validate": "npm run typecheck && npm test && npm run build"
+    "validate": "npm run typecheck && npm test && npm run build && npm run test:e2e",
+    "test:e2e": "node --test tests/e2e/*.test.mjs",
+    "worker:orchestrator": "node scripts/workers/run-orchestrator-worker.mjs",
+    "worker:cloud": "node --env-file-if-exists=.env.local services/cloud-worker/worker.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
@@ -26,6 +29,6 @@
     "typescript": "5.7.2"
   },
   "engines": {
-    "node": ">=22.6"
+    "node": ">=22.9"
   }
 }

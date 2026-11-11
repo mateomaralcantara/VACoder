@@ -1,5 +1,6 @@
 'use client';
 
+import { defaultProjectPath } from "@/lib/default-paths";
 import { useEffect, useMemo, useState } from 'react';
 import { DevicePreviewFrame } from '@/components/device-preview-frame';
 import { ProjectInspectorPanel } from '@/components/project-inspector-panel';
@@ -11,7 +12,7 @@ import {
 } from '@/lib/live-project-client';
 import type { RuntimeDevice, RuntimeStatusResponse } from '@/lib/live-project/types';
 
-const DEFAULT_PROJECT_PATH = 'C:\\Users\\martin\\Desktop\\VSC\\APPS\\migrahoy';
+const DEFAULT_PROJECT_PATH = defaultProjectPath('mi-proyecto');
 
 const EMPTY_RUNTIME: RuntimeStatusResponse = {
   status: 'idle',
@@ -114,7 +115,7 @@ export function LiveProjectView() {
           <input
             value={projectPath}
             onChange={(event) => setProjectPath(event.target.value)}
-            placeholder="C:\Users\martin\Desktop\VSC\APPS\migrahoy"
+            placeholder={DEFAULT_PROJECT_PATH}
           />
         </label>
 

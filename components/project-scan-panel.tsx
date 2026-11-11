@@ -1,5 +1,6 @@
 'use client';
 
+import { defaultProjectPath } from "@/lib/default-paths";
 import type { ProjectManifest } from '@/lib/project-manifest';
 
 interface ProjectScanPanelProps {
@@ -44,7 +45,7 @@ export function ProjectScanPanel({
             id="projectRoot"
             value={projectRoot}
             onChange={(event) => onProjectRootChange(event.target.value)}
-            placeholder='Ej: C:\Users\martin\Desktop\VSC\BestS\Coder'
+            placeholder={'Ej: ' + defaultProjectPath('mi-proyecto')}
           />
         </div>
 

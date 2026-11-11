@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import { defaultProjectPath } from "@/lib/default-paths";
 import type { CSSProperties } from "react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -80,7 +81,7 @@ function statusStyle(status?: string): CSSProperties {
 }
 
 export default function SupremeRuntimeCenter() {
-  const [projectPath, setProjectPath] = useState("C:\\Users\\martin\\Desktop\\VSC\\APPS\\avatares");
+  const [projectPath, setProjectPath] = useState(defaultProjectPath("mi-proyecto"));
   const [port, setPort] = useState(3001);
   const [command, setCommand] = useState("npm run dev -- --port 3001");
   const [terminalCommand, setTerminalCommand] = useState("npm run build");

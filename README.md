@@ -9,7 +9,7 @@ Next.js 15 · React 19 · Supabase (auth, Postgres, storage) · E2B · Stripe
 
 ## Empezar
 
-Requiere Node 22.6 o superior.
+Requiere Node 22.9 o superior.
 
 ```bash
 npm install
@@ -34,7 +34,10 @@ simuladas. Para login, organizaciones y proyectos hace falta Supabase.
 | `npm run typecheck` | TypeScript sin emitir |
 | `npm test` | Pruebas unitarias (`tests/`) |
 | `npm run build` | Build de produccion |
-| `npm run validate` | Los tres anteriores en orden; es lo que corre CI |
+| `npm run test:e2e` | Prueba de humo contra el build de produccion |
+| `npm run validate` | Todo lo anterior en orden; es lo que corre CI |
+| `npm run worker:orchestrator` | Worker de la cola de jobs (necesita la app levantada) |
+| `npm run worker:cloud` | Worker del cloud runtime (sandbox E2B) |
 
 ## Configuracion
 
@@ -72,7 +75,8 @@ el limite de proyectos de cada plan. Los limites se definen en
 `services/cloud-worker` es un worker independiente que reclama jobs de
 Supabase y los ejecuta en un sandbox E2B (install, typecheck, build, tests).
 Necesita `E2B_API_KEY`, `SUPABASE_SECRET_KEY` y `VACODER_WORKER_TOKEN`.
-`deploy/railway-cloud-worker` es el mismo worker empaquetado para Railway.
+`deploy/railway-cloud-worker` es el mismo worker empaquetado para Railway; una
+prueba impide que las dos copias diverjan, asi que cambia siempre ambas.
 
 ## Seguridad
 
@@ -84,6 +88,9 @@ servidor y ejecutan procesos. Estan pensadas para la maquina del desarrollador:
 - Solo operan dentro de la raiz de proyectos (`VACODER_APPS_ROOT`).
 - La terminal acepta una lista blanca de comandos (`lib/security/command-policy.ts`)
   y los procesos se lanzan sin shell (`lib/security/process.ts`).
+
+`/api/agent/stream` es publico solo en modo demo. Con `DEMO_MODE=false` cada
+peticion gasta creditos del proveedor de IA, asi que exige sesion.
 
 Los endpoints de workers (`/api/orchestrator/worker/*`, `/api/cloud-runtime/worker/*`)
 se autentican con `VACODER_WORKER_TOKEN`; el webhook de Stripe, con su firma.
@@ -107,7 +114,8 @@ lib/
   cloud-runtime       Snapshots y jobs en la nube
 services/cloud-worker Worker E2B
 supabase/migrations   Esquema y politicas RLS
-scripts/              Utilidades PowerShell de instalacion y certificacion
-tests/                Pruebas unitarias
+scripts/workers       Arranque de los workers
+scripts/legacy        Comprobaciones historicas de PowerShell (sin mantener)
+tests/                Pruebas unitarias y prueba de humo (tests/e2e)
 docs/                 Material de referencia
 ```

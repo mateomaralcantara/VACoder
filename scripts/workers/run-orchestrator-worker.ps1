@@ -3,4 +3,4 @@ param(
 )
 $ErrorActionPreference = "Stop"
 Set-Location $ProjectRoot
-node ".\scripts\run-orchestrator-worker.mjs"
+node ".\scripts\workers\run-orchestrator-worker.mjs"

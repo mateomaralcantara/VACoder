@@ -1,4 +1,5 @@
-﻿import { NextResponse } from "next/server";
+﻿import { EXAMPLE_PROJECT_PATH } from "@/lib/security/project-root";
+import { NextResponse } from "next/server";
 import { rollbackBackup, validateProject } from "@/lib/vacoder/core";
 
 export const runtime = "nodejs";
@@ -42,7 +43,7 @@ export async function GET() {
     usage: {
       method: "POST",
       body: {
-        projectPath: "C:\\Users\\martin\\Desktop\\VSC\\APPS\\avatares",
+        projectPath: EXAMPLE_PROJECT_PATH,
         backupId: "ID_DEL_BACKUP",
         validate: true,
       },

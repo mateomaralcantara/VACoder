@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import { defaultProjectPath } from "@/lib/default-paths";
 import type { CSSProperties } from "react";
 import { useMemo, useState } from "react";
 
@@ -150,7 +151,7 @@ async function postJson<T>(url: string, body: unknown): Promise<T> {
 }
 
 export default function MarketLeaderPremiumView() {
-  const [projectPath, setProjectPath] = useState("C:\\Users\\martin\\Desktop\\VSC\\APPS\\avatares");
+  const [projectPath, setProjectPath] = useState(defaultProjectPath("mi-proyecto"));
   const [model, setModel] = useState("gpt-5.1-codex-mini");
   const [prompt, setPrompt] = useState(
     "Analiza esta app y conviertela en un producto premium listo para vender. Agrega dashboard profesional, estados vacios, navegacion clara, componentes reutilizables, estructura visual moderna y validacion completa. No rompas el build.",

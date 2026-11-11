@@ -1,5 +1,6 @@
 'use client';
 
+import { defaultProjectPath } from "@/lib/default-paths";
 import { useCallback, useMemo, useState } from 'react';
 import { ActivityPanel } from '@/components/activity-panel';
 import { CodePanel } from '@/components/code-panel';
@@ -35,9 +36,9 @@ const INITIAL_TIMESTAMP = '2026-01-01T00:00:00.000Z';
 const DEFAULT_AGENT_PROMPT =
   'Construye un dashboard CRM moderno y explícame cada cambio en vivo.';
 
-const DEFAULT_PROJECT_ROOT = 'C:\\Users\\martin\\Desktop\\VSC\\BestS\\Coder';
+const DEFAULT_PROJECT_ROOT = defaultProjectPath('mi-proyecto');
 
-const DEFAULT_PRODUCTION_CWD = 'C:/Users/martin/Desktop/VSC/APPS/Visas';
+const DEFAULT_PRODUCTION_CWD = defaultProjectPath('mi-proyecto');
 
 const DEFAULT_PRODUCTION_PORT = 3001;
 

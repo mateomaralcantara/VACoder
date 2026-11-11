@@ -27,7 +27,7 @@ export default function JobOrchestrator({ projectId, projectName }: { projectId:
   const [priority, setPriority] = useState(5);
   const [includeTests, setIncludeTests] = useState(true);
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState("Worker independiente: inicia scripts\\run-orchestrator-worker.ps1.");
+  const [message, setMessage] = useState("Worker independiente: inicia `npm run worker:orchestrator`.");
   const base = `/api/orchestrator/projects/${encodeURIComponent(projectId)}/jobs`;
 
   const refresh = useCallback(async () => {

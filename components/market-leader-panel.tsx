@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import { defaultProjectPath } from "@/lib/default-paths";
 import { useMemo, useState } from "react";
 
 type ChangeEntry = {
@@ -50,7 +51,7 @@ function shortCode(value: string | null) {
 }
 
 export default function MarketLeaderPanel() {
-  const [projectPath, setProjectPath] = useState("C:\\Users\\martin\\Desktop\\VSC\\APPS\\avatares");
+  const [projectPath, setProjectPath] = useState(defaultProjectPath("mi-proyecto"));
   const [model, setModel] = useState("gpt-5.1-codex-mini");
   const [prompt, setPrompt] = useState(
     "Mejora esta app para que tenga login, dashboard premium, estado vacio profesional y estructura lista para vender.",

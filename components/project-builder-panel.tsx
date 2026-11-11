@@ -1,5 +1,6 @@
 'use client';
 
+import { DEFAULT_APPS_ROOT } from "@/lib/default-paths";
 import { useMemo, useState } from 'react';
 import {
   createProjectOnDisk,
@@ -8,7 +9,7 @@ import {
 } from '@/lib/project-builder-client';
 import type { ProjectBuilderPlan, ProjectBuilderRequest } from '@/lib/project-builder/types';
 
-const DEFAULT_ROOT = 'C:\\Users\\martin\\Desktop\\VSC\\APPS';
+const DEFAULT_ROOT = DEFAULT_APPS_ROOT;
 
 export function ProjectBuilderPanel() {
   const [form, setForm] = useState<ProjectBuilderRequest>({

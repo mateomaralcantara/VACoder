@@ -1,5 +1,6 @@
 'use client';
 
+import { defaultProjectPath } from "@/lib/default-paths";
 import { useEffect, useMemo, useState } from 'react';
 import styles from '@/components/production-run-panel.module.css';
 import {
@@ -111,7 +112,7 @@ function getPhaseLabel(phase: ProductionPhase): string {
 }
 
 export function ProductionRunPanel({
-  defaultCwd = 'C:/Users/martin/Desktop/VSC/APPS/migrahoy',
+  defaultCwd = defaultProjectPath('mi-proyecto'),
   defaultPort = 3001,
 }: ProductionRunPanelProps) {
   const [cwd, setCwd] = useState(defaultCwd);
@@ -209,7 +210,7 @@ export function ProductionRunPanel({
           <input
             value={cwd}
             onChange={(event) => setCwd(event.target.value)}
-            placeholder="C:/Users/martin/Desktop/VSC/APPS/migrahoy"
+            placeholder={defaultProjectPath('mi-proyecto')}
           />
         </label>
 
